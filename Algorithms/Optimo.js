@@ -30,7 +30,7 @@ function Optimo(secuence, frames) {
 
         // Si la página ya está en memoria, continuar
         if (pages_memori.includes(current_page)) {
-            result.push(createFrameObject(pages_memori)); // Guardar el estado actual
+            result.push([...pages_memori]); // Guardar el estado actual
             continue;
         }
 
@@ -48,16 +48,7 @@ function Optimo(secuence, frames) {
         }
 
         // Guardar el estado actual después de cada inserción o reemplazo
-        result.push(createFrameObject(pages_memori));
-    }
-
-    // Función para crear el objeto de frames
-    function createFrameObject(state) {
-        let frameState = {};
-        for (let i = 0; i < frames; i++) {
-            frameState[i] = state[i] !== undefined ? state[i] : null;
-        }
-        return frameState;
+        result.push([...pages_memori]);
     }
 
     // Retornar el resultado final
