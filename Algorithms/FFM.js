@@ -26,7 +26,7 @@ function FFM(secuencia, numFrames) {
 
             // Reemplaza la página más antigua
             frames[indexReemplazo] = pagina;
-            bitsReferencia.fill(0); // Restablece los bits de referencia
+            bitsReferencia[indexReemplazo] = 0; // Restablece el bit de referencia de la página reemplazada
             indexReemplazo = (indexReemplazo + 1) % numFrames;
         }
 
@@ -43,8 +43,8 @@ function FFM(secuencia, numFrames) {
 }
 
 // Ejemplo de uso
-const secuenciaPaginas = [1, 2, 3, 4, 1, 2, 5, 1];
-const numFrames = 4;
+const secuenciaPaginas = [1, 2, 1, 2, 1, 3, 1, 4];
+const numFrames = 2;
 
 const resultado = FFM(secuenciaPaginas, numFrames);
 
