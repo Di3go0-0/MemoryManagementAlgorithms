@@ -31,7 +31,7 @@ function FFM(secuencia, numFrames) {
         }
 
         // Guarda el estado actual de los frames y los bits de referencia
-        resultado.push({ ...frames }); // Clona el estado de los frames
+        resultado.push([...frames]); // Clona el estado de los frames
         bitsResultado.push([...bitsReferencia]); // Clona el estado de los bits de referencia
     }
 
@@ -43,8 +43,8 @@ function FFM(secuencia, numFrames) {
 }
 
 // Ejemplo de uso
-const secuenciaPaginas = [1, 2, 1, 2, 1, 3, 1, 4];
-const numFrames = 2;
+const secuenciaPaginas = [1, 2, 3, 4, 1, 2, 5, 1];
+const numFrames = 4;
 
 const resultado = FFM(secuenciaPaginas, numFrames);
 
