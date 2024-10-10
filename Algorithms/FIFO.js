@@ -19,7 +19,7 @@ const Fifo = (List, Frames) => {
 
     // Convertimos el estado final a la estructura deseada con los índices de frames
     const framesState = result.map(state => {
-        let frameState = {};
+        let frameState = new Array(Frames).fill(null);
         for (let i = 0; i < Frames; i++) {
             frameState[i] = state[i] !== undefined ? state[i] : null;
         }
