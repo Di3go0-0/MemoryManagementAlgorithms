@@ -1,55 +1,44 @@
 function FFM(secuencia, numFrames) {
-    let frames = new Array(numFrames).fill(null); // Inicializamos los frames de memoria vacíos
-    let bitsReferencia = new Array(numFrames).fill(null); // Inicializamos los bits de referencia
-    let puntero = 0; // Inicializamos el puntero para el reemplazo FIFO
-    let fallos = 0; // Contador de fallos de página
-    let resultado = []; // Para almacenar el estado de los frames en cada iteración
-    let bitsResultado = []; // Para almacenar el estado de los bits de referencia
+    let frames = new Array(numFrames).fill(null); // Inicializa los frames vacíos
+    let bitsReferencia = new Array(numFrames).fill(0); // Inicializa los bits de referencia en 0
+    let resultado = []; // Estado de los frames por iteración
+    let bitsResultado = []; // Estado de los bits de referencia por iteración
+    let pageFaults = 0; // Contador de fallos de página
+    let indexReemplazo = 0; // Índice para llevar el control del reemplazo en orden FIFO
 
-    // Iteramos sobre cada página en la secuencia de páginas solicitadas
-    secuencia.forEach((pagina, iteracion) => {
-        console.log(`Entrando página: ${pagina}`);
-        
-        let indice = frames.indexOf(pagina); // Verificamos si la página ya está en los frames
+    for (let i = 0; i < secuencia.length; i++) {
+        const pagina = secuencia[i];
+        const indexPagina = frames.indexOf(pagina); // Verifica si la página ya está en los frames
 
-        if (indice !== -1) {  
-            // La página ya está en los frames, no hay fallo de página
-            bitsReferencia[indice] = iteracion;  // Actualizamos el bit de referencia con el índice actual
+        if (indexPagina !== -1) {
+            // La página ya está en los frames, actualiza su bit de referencia
+            bitsReferencia.fill(0); // Solo puede haber un bit de referencia a la vez
+            bitsReferencia[indexPagina] = 1;
         } else {
-            // La página no está en los frames, es un fallo de página
-            fallos++;  // Aumentamos el contador de fallos de página
+            // Fallo de página, la página no está en los frames
+            pageFaults++;
 
-            // Ciclo para buscar la página que será reemplazada
-            while (true) {
-                if (bitsReferencia[puntero] === null) {
-                    // Si no tiene bit de referencia, reemplazamos
-                    frames[puntero] = pagina; // Reemplazamos el frame
-                    bitsReferencia[puntero] = iteracion; // Guardamos el índice de la iteración como bit de referencia
-                    puntero = (puntero + 1) % numFrames; // Movemos el puntero circularmente
-                    break; // Terminamos el ciclo de reemplazo
-                } else {
-                    // Si tiene bit de referencia, lo reseteamos y movemos el puntero
-                    bitsReferencia[puntero] = null; // Reseteamos el bit de referencia
-                    puntero = (puntero + 1) % numFrames; // Movemos el puntero circularmente
-                }
+            // Busca la página más vieja para reemplazar
+            while (bitsReferencia[indexReemplazo] === 1) {
+                bitsReferencia[indexReemplazo] = 0; // Quita el bit de referencia y sigue buscando
+                indexReemplazo = (indexReemplazo + 1) % numFrames;
             }
+
+            // Reemplaza la página más antigua
+            frames[indexReemplazo] = pagina;
+            bitsReferencia.fill(0); // Restablece los bits de referencia
+            indexReemplazo = (indexReemplazo + 1) % numFrames;
         }
 
-        // Guardamos el estado de los frames y bits de referencia en cada iteración
-        resultado.push({ ...frames }); // Copiamos el estado de los frames
-        bitsResultado.push([...bitsReferencia]); // Guardamos el estado de bits de referencia
+        // Guarda el estado actual de los frames y los bits de referencia
+        resultado.push({ ...frames }); // Clona el estado de los frames
+        bitsResultado.push([...bitsReferencia]); // Clona el estado de los bits de referencia
+    }
 
-        console.log(`Frames:`, frames);
-        console.log(`Bits de referencia:`, bitsReferencia);
-    });
-
-    console.log(`Total de fallos de página: ${fallos}`);
-
-    // Retornamos el estado de los frames en cada iteración y el número de fallos
     return {
         framesState: resultado,
         bitsReferenciaState: bitsResultado,
-        pageFaults: fallos
+        pageFaults: pageFaults
     };
 }
 
@@ -59,7 +48,6 @@ const numFrames = 4;
 
 const resultado = FFM(secuenciaPaginas, numFrames);
 
-// Mostramos los resultados
 console.log("Estado de los frames por iteración: ", resultado.framesState);
 console.log("Estado de los bits de referencia por iteración: ", resultado.bitsReferenciaState);
-console.log("Total de fallos de página: ", resultado.pageFaults);
+console.log("Fallos de página: ", resultado.pageFaults);
