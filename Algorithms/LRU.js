@@ -1,7 +1,7 @@
 const LRU = (List, Frames) => {
     let lru = []; // Lista para mantener las páginas en los frames
     let page_faults = 0; // Contador de fallos de página
-    let result = Array(List.length).fill(null).map(() => ({})); // Para guardar los estados de los frames con orden fijo
+    let result = Array(List.length).fill(null).map(() => Array(Frames).fill(null)); // Para guardar los estados de los frames con orden fijo
 
     // Array para simular el frame con valores iniciales nulos
     let frameArray = Array(Frames).fill(null);
@@ -42,18 +42,9 @@ const LRU = (List, Frames) => {
         insertIntoLRU(List[i], i);
     }
 
-    // Convertimos el estado de los frames a un formato más claro
-    const framesState = result.map(state => {
-        let frameState = {};
-        for (let i = 0; i < Frames; i++) {
-            frameState[i] = state[i] !== undefined ? state[i] : null;
-        }
-        return frameState;
-    });
-
     // Retornamos el estado de los frames y el número de fallos de página
     return {
-        framesState: framesState,
+        framesState: result,
         pageFaults: page_faults
     };
 };
