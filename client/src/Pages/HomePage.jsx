@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { useGlobalContext } from "../Context/Context";
+import OptimoComponent from "../Components/OptimoComponent";
+import FifoComponet from "../Components/FifoComponet";
+import LruComponent from "../Components/LruComponent";
+import FfmComponent from "../Components/FfmComponent";
 import "./HomePage.css";
 
 function HomePage() {
   const [inputValue, setInputValue] = useState("");
+  const [activeComponent, setActiveComponent] = useState(null);
   const { addPages } = useGlobalContext();
 
   const handleInputChange = (event) => {
@@ -13,6 +18,21 @@ function HomePage() {
   const handleButtonClick = () => {
     const pages = inputValue.trim().split(/\s+/).map(Number).filter(n => !isNaN(n));
     addPages(pages);
+  };
+
+  const renderActiveComponent = () => {
+    switch (activeComponent) {
+      case 'Optimo':
+        return <OptimoComponent />;
+      case 'FIFO':
+        return <FifoComponet />;
+      case 'LRU':
+        return <LruComponent />;
+      case 'FFM':
+        return <FfmComponent />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -30,7 +50,26 @@ function HomePage() {
           <button onClick={handleButtonClick}>OK</button>
         </div>
       </div>
-      <div className="body"></div>
+      <div className="Options">
+        <div>
+          <button onClick={() => setActiveComponent('Optimo')}>Optimo</button>
+        </div>
+        <div>
+          <button onClick={() => setActiveComponent('FIFO')}>FIFO</button>
+        </div>
+        <div>
+          <button onClick={() => setActiveComponent('LRU')}>LRU</button>
+        </div>
+        <div>
+          <button onClick={() => setActiveComponent('FFM')}>FFM</button>
+        </div>
+        <div>
+          <button onClick={() => setActiveComponent(null)}>Todos</button>
+        </div>
+      </div>
+      <div className="body">
+        {renderActiveComponent()}
+      </div>
     </main>
   );
 }

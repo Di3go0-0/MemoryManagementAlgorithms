@@ -11,8 +11,10 @@ body {
 }
 main {
   display: flex;
-  justify-content: center;
+  width: 100vw;
   height: 100vh;
+  align-items: center;
+  flex-direction: column;
 }
 
 .input-container {
@@ -21,6 +23,7 @@ main {
   width: 100vmin;
   height: 50px;
   padding: 10px;
+  margin: 5px;
 }
 
 .input-container input {
@@ -37,5 +40,28 @@ main {
   border-radius: 10px;
   width: 50px;
   height: 30px;
+}
+.button-container button:hover{
+  background-color: #404040;
+}
+
+.Options{
+  display: flex;
+  justify-content: space-around;
+  width: 100vmin;
+  height: 50px;
+  margin: 5px;
+  align-items: center;
+}
+
+.Options button {
+  justify-content: center;
+  width: 50px;
+  height: 25px;
+  border-radius: 10px;
+}
+
+.Options button:hover {
+  background-color: #404040;
 }
 
