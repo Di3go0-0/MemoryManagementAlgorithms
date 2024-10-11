@@ -17,6 +17,13 @@ main {
   flex-direction: column;
 }
 
+.body{
+  display: flex;
+  justify-content: center;
+  width: auto;
+  max-width: 100vh;
+}
+
 .input-container {
   display: flex;
   justify-content: space-between;

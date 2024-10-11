@@ -4,6 +4,8 @@ import OptimoComponent from "../Components/OptimoComponent";
 import FifoComponet from "../Components/FifoComponet";
 import LruComponent from "../Components/LruComponent";
 import FfmComponent from "../Components/FfmComponent";
+import All from "../Components/All";
+
 import "./HomePage.css";
 
 function HomePage() {
@@ -30,6 +32,8 @@ function HomePage() {
         return <LruComponent />;
       case 'FFM':
         return <FfmComponent />;
+      case 'All':
+        return <All />;
       default:
         return null;
     }
@@ -85,8 +89,8 @@ function HomePage() {
         </div>
         <div>
           <button
-            className={activeComponent === null ? 'active' : ''}
-            onClick={() => setActiveComponent(null)}
+            className={activeComponent === 'All' ? 'active' : ''}
+            onClick={() => setActiveComponent('All')}
           >
             Todos
           </button>

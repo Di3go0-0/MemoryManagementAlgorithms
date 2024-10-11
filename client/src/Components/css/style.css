@@ -1,16 +1,25 @@
 .main {
   display: flex;
-  width: 100vw;
+  width: 100vh;
   align-items: center;
   flex-direction: column;
   margin: 10px;
+}
+.result {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 90vmin;
+  padding: 10px;
+  margin: 5px;
+  align-items: center;
 }
 
 .input-Frame {
   display: flex;
   justify-content: first baseline;
   align-items: center;
-  width: 80vmin;
+  width: 90vmin;
   height: 50px;
   padding: 10px;
   margin: 5px;
@@ -43,7 +52,7 @@
 
 /* Estilos para la tabla */
 table {
-  width: 100%;
+  width: 90%;
   border-collapse: collapse; /* Asegura que los bordes de las celdas se colapsen en un solo borde */
   margin-top: 20px;
 }
