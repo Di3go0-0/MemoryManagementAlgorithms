@@ -92,7 +92,9 @@ tr:nth-child(odd) {
 
 .Tables{
   margin-top: 5px;
-  max-width: 100%;
+  min-width: 50vmin;
+  /* width: 50vmin; */
+  max-width: 80vmin;
   overflow-x: auto; /* Añade scroll horizontal solo si es necesario */
 }
 
