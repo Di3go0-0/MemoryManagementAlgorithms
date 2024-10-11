@@ -20,12 +20,14 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  width: 90vmin;
+  min-width: 30vmin;
+  max-width: 90vmin;
   padding: 0px 0px 20px;
   /* padding: 10px; */
   /* margin: 5px; */
   align-items: center;
 }
+
 
 .input-Frame {
   display: flex;
@@ -61,8 +63,6 @@
   color: var(--text-color);
 }
 
-
-
 /* Estilos para la tabla */
 table {
   width: 90%;
@@ -70,7 +70,8 @@ table {
   margin-top: 20px;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ffffff; /* Define el borde de las celdas */
   padding: 8px; /* Añade espacio dentro de las celdas */
   text-align: center; /* Centra el texto dentro de las celdas */
@@ -82,19 +83,32 @@ th {
 }
 
 tr:nth-child(even) {
-  background-color: var(--filas-pares); /* Color de fondo para las filas pares */
+  background-color: var(
+    --filas-pares
+  ); /* Color de fondo para las filas pares */
 }
 
 tr:nth-child(odd) {
-  background-color: var(--filas-impares); /* Color de fondo para las filas impares */
+  background-color: var(
+    --filas-impares
+  ); /* Color de fondo para las filas impares */
 }
 
-
-.Tables{
+.Tables {
   margin-top: 5px;
   min-width: 50vmin;
   /* width: 50vmin; */
-  max-width: 80vmin;
+  max-width: 85vmin;
+  min-height: 30vmin;
+  max-height: 50vmin;
+  overflow-x: auto; /* Añade scroll horizontal solo si es necesario */
+}
+
+.tables {
+  margin-top: 5px;
+  min-width: 50vmin;
+  /* width: 50vmin; */
+  max-width: 85vmin;
   overflow-x: auto; /* Añade scroll horizontal solo si es necesario */
 }
 

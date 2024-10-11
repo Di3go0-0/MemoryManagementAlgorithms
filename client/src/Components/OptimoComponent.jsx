@@ -1,43 +1,43 @@
-import React, { useState } from 'react'
-import { useGlobalContext } from '../Context/Context'
-import Optimo from '../Algorithms/Optimo.js'
-import './css/style.css'
+import React, { useState } from "react";
+import { useGlobalContext } from "../Context/Context";
+import Optimo from "../Algorithms/Optimo.js";
+import "./css/style.css";
 
 function OptimoComponent() {
-  const [inputValue, setInputValue] = useState("")
-  const [showResult, setShowResult] = useState(false)
-  const [framesState, setFramesState] = useState([])
-  const [pageFaults, setPageFaults] = useState(0)
+  const [inputValue, setInputValue] = useState("");
+  const [showResult, setShowResult] = useState(false);
+  const [framesState, setFramesState] = useState([]);
+  const [pageFaults, setPageFaults] = useState(0);
 
-  const { pagesList } = useGlobalContext()
+  const { pagesList } = useGlobalContext();
 
   const handleInputChange = (event) => {
-    setInputValue(event.target.value)
-  }
+    setInputValue(event.target.value);
+  };
 
   const handleButtonClick = () => {
-    const frames = Number(inputValue)
+    const frames = Number(inputValue);
 
     if (frames <= 0 || isNaN(frames)) {
-      alert("Por favor, introduce un número válido de frames")
-      return
+      alert("Por favor, introduce un número válido de frames");
+      return;
     }
 
-    const resultado = Optimo(pagesList, frames)
-    setFramesState(resultado.framesState || [])
-    setPageFaults(resultado.pageFaults || 0)
-    setShowResult(true)
-  }
+    const resultado = Optimo(pagesList, frames);
+    setFramesState(resultado.framesState || []);
+    setPageFaults(resultado.pageFaults || 0);
+    setShowResult(true);
+  };
 
   const renderTable = () => {
-    const numRows = Number(inputValue) + 1
-    const numCols = pagesList.length
+    const numRows = Number(inputValue) + 1;
+    const numCols = pagesList.length;
 
     // Detectar si la página en una celda fue reemplazada
     const isPageFault = (currentFrame, prevFrame, rowIndex) => {
-      if (!prevFrame) return false // No hay frame anterior en la primera iteración
-      return currentFrame[rowIndex] !== prevFrame[rowIndex] // Solo verifica cambios en la posición específica
-    }
+      if (!prevFrame) return false; // No hay frame anterior en la primera iteración
+      return currentFrame[rowIndex] !== prevFrame[rowIndex]; // Solo verifica cambios en la posición específica
+    };
 
     return (
       <table>
@@ -52,43 +52,47 @@ function OptimoComponent() {
           {Array.from({ length: numRows - 1 }).map((_, rowIndex) => (
             <tr key={rowIndex}>
               {framesState.map((frame, colIndex) => {
-                const prevFrame = framesState[colIndex - 1] || [] // Frame anterior
+                const prevFrame = framesState[colIndex - 1] || []; // Frame anterior
 
                 // Para la primera columna (colIndex === 0), pintar la primera fila del tbody (rowIndex === 0)
                 if (colIndex === 0) {
-                  const isFirstRow = rowIndex === 0 // Verificar si estamos en la primera fila del tbody
+                  const isFirstRow = rowIndex === 0; // Verificar si estamos en la primera fila del tbody
                   return (
                     <td
                       key={colIndex}
                       style={{
-                        backgroundColor: isFirstRow ? '#2c313d' : 'transparent' // Solo pinta la primera fila
+                        backgroundColor: isFirstRow ? "#2c313d" : "transparent", // Solo pinta la primera fila
                       }}
                     >
-                      {frame[rowIndex] !== null && frame[rowIndex] !== undefined ? frame[rowIndex] : ""}
+                      {frame[rowIndex] !== null && frame[rowIndex] !== undefined
+                        ? frame[rowIndex]
+                        : ""}
                     </td>
-                  )
+                  );
                 }
 
                 // Para las demás columnas, verificar page faults
-                const hasPageFault = isPageFault(frame, prevFrame, rowIndex)
+                const hasPageFault = isPageFault(frame, prevFrame, rowIndex);
 
                 return (
                   <td
                     key={colIndex}
                     style={{
-                      backgroundColor: hasPageFault ? '#2c313d' : 'transparent'
+                      backgroundColor: hasPageFault ? "#2c313d" : "transparent",
                     }}
                   >
-                    {frame[rowIndex] !== null && frame[rowIndex] !== undefined ? frame[rowIndex] : ""}
+                    {frame[rowIndex] !== null && frame[rowIndex] !== undefined
+                      ? frame[rowIndex]
+                      : ""}
                   </td>
-                )
+                );
               })}
             </tr>
           ))}
         </tbody>
       </table>
-    )
-  }
+    );
+  };
 
   return (
     <div className="main">
@@ -107,12 +111,14 @@ function OptimoComponent() {
       </div>
       {showResult && (
         <div className="result">
-          <h2>Page Faults: {pageFaults}</h2>
-          {renderTable()}
+          <div className="tables">
+            <h2>Page Faults: {pageFaults}</h2>
+            {renderTable()}
+          </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default OptimoComponent
+export default OptimoComponent;
