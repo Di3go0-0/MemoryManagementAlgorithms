@@ -1,0 +1,41 @@
+/* Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #202020;
+  color: white;
+}
+main {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+.input-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100vmin;
+  height: 50px;
+  padding: 10px;
+}
+
+.input-container input {
+  width: 80vmin;
+  border-radius: 10px;
+  height: 30px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+.button-container button {
+  border-radius: 10px;
+  width: 50px;
+  height: 30px;
+}
+
