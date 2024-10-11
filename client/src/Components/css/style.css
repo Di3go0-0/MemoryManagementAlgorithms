@@ -1,3 +1,13 @@
+:root {
+  --fondo: #161825;
+  --background-color: #58626c;
+  --text-color: white;
+  --border-color: #2c313d;
+  --hover-color: #2c313d;
+  --filas-pares: #4d6379;
+  --filas-impares: #4d6379;
+}
+
 .main {
   display: flex;
   width: 100vh;
@@ -5,13 +15,14 @@
   flex-direction: column;
   margin: 10px;
 }
+
 .result {
   display: flex;
   justify-content: center;
   flex-direction: column;
   width: 90vmin;
-  padding: 10px;
-  margin: 5px;
+  /* padding: 10px; */
+  /* margin: 5px; */
   align-items: center;
 }
 
@@ -45,7 +56,8 @@
   height: 30px;
 }
 .button-Frame button:hover {
-  background-color: #404040;
+  background-color: var(--hover-color);
+  color: var(--text-color);
 }
 
 
@@ -64,14 +76,21 @@ th, td {
 }
 
 th {
-  background-color: #000000; /* Color de fondo para los encabezados */
+  background-color: var(--fondo); /* Color de fondo para los encabezados */
   font-weight: bold; /* Negrita para los encabezados */
 }
 
 tr:nth-child(even) {
-  background-color: #202020; /* Color de fondo para las filas pares */
+  background-color: var(--filas-pares); /* Color de fondo para las filas pares */
 }
 
-tr:hover {
-  background-color: #000000; /* Color de fondo al pasar el ratón por encima de una fila */
+tr:nth-child(odd) {
+  background-color: var(--filas-impares); /* Color de fondo para las filas impares */
+}
+
+
+.Tables{
+  margin-top: 5px;
+  max-width: 100%;
+  overflow-x: auto; /* Añade scroll horizontal solo si es necesario */
 }

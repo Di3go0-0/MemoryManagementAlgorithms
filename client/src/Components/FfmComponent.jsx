@@ -56,7 +56,7 @@ function FfmComponent() {
                     key={colIndex}
                     className={hasReferenceBit ? 'reference-bit' : ''}
                     style={{
-                      backgroundColor: hasReferenceBit ? '#ff0000' : 'transparent', // Cambiar color de fondo si tiene bit de referencia
+                      backgroundColor: hasReferenceBit ? '#2c313d' : 'transparent', // Cambiar color de fondo si tiene bit de referencia
                     }}
                   >
                     {frame[rowIndex] !== null && frame[rowIndex] !== undefined

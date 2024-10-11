@@ -2,3 +2,14 @@
     display: flex;
     width: 100vw;
 }
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Evita el scroll horizontal */
+}
+
+main {
+  max-width: 100%;
+  overflow-x: hidden; /* Evita el scroll horizontal en el contenedor principal */
+  box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho y alto del elemento */
+}

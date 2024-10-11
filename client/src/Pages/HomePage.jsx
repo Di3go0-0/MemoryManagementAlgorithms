@@ -19,8 +19,13 @@ function HomePage() {
 
   const handleButtonClick = () => {
     const pages = inputValue.trim().split(/\s+/).map(Number).filter(n => !isNaN(n));
+    if (pages.length === 0 || pages.some(n => n < 0)) {
+      alert("Por favor, introduce páginas válidas");
+      return;
+    }
     addPages(pages);
   };
+
 
   const renderActiveComponent = () => {
     switch (activeComponent) {

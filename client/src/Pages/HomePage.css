@@ -4,10 +4,18 @@
   padding: 0;
   box-sizing: border-box;
 }
+:root {
+  --fondo: #161825;
+  --background-color: #58626c;
+  --text-color: white;
+  --border-color: #2c313d;
+  --hover-color: #2c313d;
+}
 
 body {
-  background-color: #202020;
-  color: white;
+  background-color: var(--fondo);
+  color: var(--text-color);
+
 }
 main {
   display: flex;
@@ -21,21 +29,37 @@ main {
   display: flex;
   justify-content: center;
   width: auto;
+  
   max-width: 100vh;
+
+  overflow-x: hidden; 
+  box-sizing: border-box;
+
+
+  margin: 5px;
+  
+  border: solid 2px var(--border-color);
+  border-radius: 5px;
+  background-color: var(--background-color);
 }
 
 .input-container {
   display: flex;
-  justify-content: space-between;
   width: 100vmin;
   height: 50px;
+  justify-content: space-between;
   padding: 10px;
   margin: 5px;
+  margin-top: 15px;
+
+  border: solid 2px var(--border-color);
+  border-radius: 5px;
+  background-color: var(--background-color);
 }
 
 .input-container input {
   width: 80vmin;
-  border-radius: 10px;
+  border-radius: 5px;
   height: 30px;
   text-align: center;
 }
@@ -45,12 +69,13 @@ main {
   justify-content: center;
 }
 .button-container button {
-  border-radius: 10px;
+  border-radius: 5px;
   width: 50px;
   height: 30px;
 }
 .button-container button:hover{
-  background-color: #404040;
+  background-color: var(--hover-color);
+  color: var(--text-color);
 }
 
 .Options{
@@ -58,22 +83,30 @@ main {
   justify-content: space-around;
   width: 100vmin;
   height: 50px;
+  min-height: 50px;
   margin: 5px;
   align-items: center;
+
+  border: solid 2px var(--border-color);
+  border-radius: 5px;
+  background-color: var(--background-color);
 }
 
 .Options button {
   justify-content: center;
-  width: 50px;
+  width: 55px;
   height: 25px;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .Options button:hover {
-  background-color: #404040;
+  background-color: var(--background-color);
+  color: var(--text-color);
+
 }
 
 /* Estilo para el botón activo */
 .Options button.active {
-  background-color: #4d1f1f;
+  background-color: var(--hover-color);
+  color: var(--text-color);
 }
