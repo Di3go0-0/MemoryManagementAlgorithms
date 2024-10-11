@@ -49,10 +49,12 @@ const LRU = (List, Frames) => {
     };
 };
 
-// Ejemplo de uso
-const secuence = [6, 1, 7, 1, 2, 1, 5, 6, 0, 1, 7, 1, 1, 6, 0, 7, 0 , 1, 2, 6, 1];
-const frames = 3;
-const result = LRU(secuence, frames);
+// // Ejemplo de uso
+// const secuence = [6, 1, 7, 1, 2, 1, 5, 6, 0, 1, 7, 1, 1, 6, 0, 7, 0 , 1, 2, 6, 1];
+// const frames = 3;
+// const result = LRU(secuence, frames);
 
-console.log("Frames State: ", result.framesState);
-console.log("Page Faults: ", result.pageFaults);
+// console.log("Frames State: ", result.framesState);
+// console.log("Page Faults: ", result.pageFaults);
+
+export default LRU;

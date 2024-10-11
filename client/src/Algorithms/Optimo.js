@@ -1,4 +1,4 @@
-function Optimo(secuence, frames) {
+const Optimo = (secuence, frames) => {
     const pages = secuence.length;
     let page_faults = 0;
     let pages_memori = new Array(frames).fill(null); // Iniciamos la memoria con 'null'
@@ -58,9 +58,11 @@ function Optimo(secuence, frames) {
     };
 }
 
-// Ejemplo de uso
-const secuence = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0];
-const frames = 4;
-const resultado = Optimo(secuence, frames);
-console.log("Frames State: ", resultado.framesState);
-console.log("Page Faults: ", resultado.pageFaults);
+// // Ejemplo de uso
+// const secuence = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0];
+// const frames = 4;
+// const resultado = Optimo(secuence, frames);
+// console.log("Frames State: ", resultado.framesState);
+// console.log("Page Faults: ", resultado.pageFaults);
+
+export default Optimo;
