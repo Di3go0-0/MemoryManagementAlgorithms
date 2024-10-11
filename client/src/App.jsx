@@ -5,13 +5,15 @@ import { ContextProvider } from "./Context/Context";
 
 function App() {
   return (
-    <ContextProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-        </Routes>
-      </BrowserRouter>
-    </ContextProvider>
+    
+      <ContextProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+          </Routes>
+        </BrowserRouter>
+      </ContextProvider>
+    
   );
 }
 
