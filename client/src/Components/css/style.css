@@ -21,6 +21,7 @@
   justify-content: center;
   flex-direction: column;
   width: 90vmin;
+  padding: 0px 0px 20px;
   /* padding: 10px; */
   /* margin: 5px; */
   align-items: center;
@@ -94,3 +95,4 @@ tr:nth-child(odd) {
   max-width: 100%;
   overflow-x: auto; /* Añade scroll horizontal solo si es necesario */
 }
+

@@ -60,7 +60,11 @@ function All() {
     const numRows = Number(inputValue) + 1; // Número de filas (frames + 1 para el título)
     const numCols = pagesList.length; // Número de columnas
 
-    console.log(bitsReferenciaState);
+    // Detectar si la página en una celda fue reemplazada
+    const isPageFault = (currentFrame, prevFrame, rowIndex) => {
+      if (!prevFrame) return false; // No hay frame anterior en la primera iteración
+      return currentFrame[rowIndex] !== prevFrame[rowIndex]; // Solo verifica cambios en la posición específica
+    };
 
     return (
       <table>
@@ -75,17 +79,39 @@ function All() {
           {Array.from({ length: numRows - 1 }).map((_, rowIndex) => (
             <tr key={rowIndex}>
               {FfmFramesState.map((frame, colIndex) => {
+                const prevFrame = FfmFramesState[colIndex - 1] || []; // Frame anterior
                 const bitReferencia = bitsReferenciaState[colIndex]?.[rowIndex]; // Obtener el bit de referencia para esta celda
                 const hasReferenceBit = bitReferencia === 1;
+
+                // Para la primera columna (colIndex === 0), pintar la primera fila del tbody (rowIndex === 0)
+                if (colIndex === 0) {
+                  const isFirstRow = rowIndex === 0; // Verificar si estamos en la primera fila del tbody
+                  return (
+                    <td
+                      key={colIndex}
+                      style={{
+                        backgroundColor: isFirstRow ? "#2c313d" : "transparent", // Solo pinta la primera fila
+                        color: hasReferenceBit ? "black" : "white", // Cambiar color de fondo si tiene bit de referencia
+                        fontWeight: hasReferenceBit ? "bold" : "normal", // Cambiar el peso de la fuente si tiene bit de referencia
+                      }}
+                    >
+                      {frame[rowIndex] !== null && frame[rowIndex] !== undefined
+                        ? frame[rowIndex]
+                        : ""}
+                    </td>
+                  );
+                }
+
+                // Para las demás columnas, verificar page faults
+                const hasPageFault = isPageFault(frame, prevFrame, rowIndex);
 
                 return (
                   <td
                     key={colIndex}
-                    className={hasReferenceBit ? "reference-bit" : ""}
                     style={{
-                      backgroundColor: hasReferenceBit
-                        ? "#2c313d"
-                        : "transparent", // Cambiar color de fondo si tiene bit de referencia
+                      backgroundColor: hasPageFault ? "#2c313d" : "transparent",
+                      color: hasReferenceBit ? "black" : "white", // Cambiar color de fondo si tiene bit de referencia
+                      fontWeight: hasReferenceBit ? "bold" : "normal", // Cambiar el peso de la fuente si tiene bit de referencia
                     }}
                   >
                     {frame[rowIndex] !== null && frame[rowIndex] !== undefined
@@ -102,8 +128,14 @@ function All() {
   };
 
   const RenderTable = (framesState) => {
-    const numRows = Number(inputValue) + 1;
-    const numCols = pagesList.length;
+    const numRows = Number(inputValue) + 1
+    const numCols = pagesList.length
+
+    // Detectar si la página en una celda fue reemplazada
+    const isPageFault = (currentFrame, prevFrame, rowIndex) => {
+      if (!prevFrame) return false // No hay frame anterior en la primera iteración
+      return currentFrame[rowIndex] !== prevFrame[rowIndex] // Solo verifica cambios en la posición específica
+    }
 
     return (
       <table>
@@ -117,18 +149,43 @@ function All() {
         <tbody>
           {Array.from({ length: numRows - 1 }).map((_, rowIndex) => (
             <tr key={rowIndex}>
-              {framesState.map((frame, colIndex) => (
-                <td key={colIndex}>
-                  {frame[rowIndex] !== null && frame[rowIndex] !== undefined
-                    ? frame[rowIndex]
-                    : ""}
-                </td>
-              ))}
+              {framesState.map((frame, colIndex) => {
+                const prevFrame = framesState[colIndex - 1] || [] // Frame anterior
+
+                // Para la primera columna (colIndex === 0), pintar la primera fila del tbody (rowIndex === 0)
+                if (colIndex === 0) {
+                  const isFirstRow = rowIndex === 0 // Verificar si estamos en la primera fila del tbody
+                  return (
+                    <td
+                      key={colIndex}
+                      style={{
+                        backgroundColor: isFirstRow ? '#2c313d' : 'transparent' // Solo pinta la primera fila
+                      }}
+                    >
+                      {frame[rowIndex] !== null && frame[rowIndex] !== undefined ? frame[rowIndex] : ""}
+                    </td>
+                  )
+                }
+
+                // Para las demás columnas, verificar page faults
+                const hasPageFault = isPageFault(frame, prevFrame, rowIndex)
+
+                return (
+                  <td
+                    key={colIndex}
+                    style={{
+                      backgroundColor: hasPageFault ? '#2c313d' : 'transparent'
+                    }}
+                  >
+                    {frame[rowIndex] !== null && frame[rowIndex] !== undefined ? frame[rowIndex] : ""}
+                  </td>
+                )
+              })}
             </tr>
           ))}
         </tbody>
       </table>
-    );
+    )
   };
 
     const EstadisticasTable = () => {
@@ -201,7 +258,7 @@ function All() {
             {FFMRender()}
           </div>
           <div className="Tables">
-            <h1>Estadisticas</h1>
+            <h1>Statistcs</h1>
             {EstadisticasTable()}
           </div>
         </div>

@@ -50,7 +50,7 @@ function HomePage() {
         <label>
           <input
             type="text"
-            placeholder="Introducir páginas separadas por espacio"
+            placeholder="Introducir las páginas separadas por espacio"
             value={inputValue}
             onChange={handleInputChange}
           />

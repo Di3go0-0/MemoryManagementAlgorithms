@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from "react";
 import { useGlobalContext } from "../Context/Context";
 import FFM from "../Algorithms/FFM.js";
 import "./css/style.css";
@@ -18,7 +18,7 @@ function FfmComponent() {
 
   const handleButtonClick = () => {
     const frames = Number(inputValue); // Convertir el valor del input a número
-    if(frames <= 0 || isNaN(frames)) {
+    if (frames <= 0 || isNaN(frames)) {
       alert("Por favor, introduce un número válido de frames");
       return;
     }
@@ -33,7 +33,11 @@ function FfmComponent() {
     const numRows = Number(inputValue) + 1; // Número de filas (frames + 1 para el título)
     const numCols = pagesList.length; // Número de columnas
 
-    console.log(bitsReferenciaState);
+    // Detectar si la página en una celda fue reemplazada
+    const isPageFault = (currentFrame, prevFrame, rowIndex) => {
+      if (!prevFrame) return false; // No hay frame anterior en la primera iteración
+      return currentFrame[rowIndex] !== prevFrame[rowIndex]; // Solo verifica cambios en la posición específica
+    };
 
     return (
       <table>
@@ -48,20 +52,44 @@ function FfmComponent() {
           {Array.from({ length: numRows - 1 }).map((_, rowIndex) => (
             <tr key={rowIndex}>
               {framesState.map((frame, colIndex) => {
+                const prevFrame = framesState[colIndex - 1] || []; // Frame anterior
                 const bitReferencia = bitsReferenciaState[colIndex]?.[rowIndex]; // Obtener el bit de referencia para esta celda
                 const hasReferenceBit = bitReferencia === 1;
+
+                // Para la primera columna (colIndex === 0), pintar la primera fila del tbody (rowIndex === 0)
+                if (colIndex === 0) {
+                  const isFirstRow = rowIndex === 0; // Verificar si estamos en la primera fila del tbody
+                  return (
+                    <td
+                      key={colIndex}
+                      style={{
+                        backgroundColor: isFirstRow ? "#2c313d" : "transparent", // Solo pinta la primera fila
+                        color: hasReferenceBit ? "black" : "white", // Cambiar color de fondo si tiene bit de referencia
+                        fontWeight: hasReferenceBit ? "bold" : "normal", // Cambiar el peso de la fuente si tiene bit de referencia
+                      }}
+                    >
+                      {frame[rowIndex] !== null && frame[rowIndex] !== undefined
+                        ? frame[rowIndex]
+                        : ""}
+                    </td>
+                  );
+                }
+
+                // Para las demás columnas, verificar page faults
+                const hasPageFault = isPageFault(frame, prevFrame, rowIndex);
 
                 return (
                   <td
                     key={colIndex}
-                    className={hasReferenceBit ? 'reference-bit' : ''}
                     style={{
-                      backgroundColor: hasReferenceBit ? '#2c313d' : 'transparent', // Cambiar color de fondo si tiene bit de referencia
+                      backgroundColor: hasPageFault ? "#2c313d" : "transparent",
+                      color: hasReferenceBit ? "black" : "white", // Cambiar color de fondo si tiene bit de referencia
+                      fontWeight: hasReferenceBit ? "bold" : "normal", // Cambiar el peso de la fuente si tiene bit de referencia
                     }}
                   >
                     {frame[rowIndex] !== null && frame[rowIndex] !== undefined
                       ? frame[rowIndex]
-                      : ''}
+                      : ""}
                   </td>
                 );
               })}
@@ -95,7 +123,7 @@ function FfmComponent() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default FfmComponent
+export default FfmComponent;
