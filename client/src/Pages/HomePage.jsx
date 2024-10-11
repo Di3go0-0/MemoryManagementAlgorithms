@@ -52,19 +52,44 @@ function HomePage() {
       </div>
       <div className="Options">
         <div>
-          <button onClick={() => setActiveComponent('Optimo')}>Optimo</button>
+          <button
+            className={activeComponent === 'Optimo' ? 'active' : ''}
+            onClick={() => setActiveComponent('Optimo')}
+          >
+            Optimo
+          </button>
         </div>
         <div>
-          <button onClick={() => setActiveComponent('FIFO')}>FIFO</button>
+          <button
+            className={activeComponent === 'FIFO' ? 'active' : ''}
+            onClick={() => setActiveComponent('FIFO')}
+          >
+            FIFO
+          </button>
         </div>
         <div>
-          <button onClick={() => setActiveComponent('LRU')}>LRU</button>
+          <button
+            className={activeComponent === 'LRU' ? 'active' : ''}
+            onClick={() => setActiveComponent('LRU')}
+          >
+            LRU
+          </button>
         </div>
         <div>
-          <button onClick={() => setActiveComponent('FFM')}>FFM</button>
+          <button
+            className={activeComponent === 'FFM' ? 'active' : ''}
+            onClick={() => setActiveComponent('FFM')}
+          >
+            FFM
+          </button>
         </div>
         <div>
-          <button onClick={() => setActiveComponent(null)}>Todos</button>
+          <button
+            className={activeComponent === null ? 'active' : ''}
+            onClick={() => setActiveComponent(null)}
+          >
+            Todos
+          </button>
         </div>
       </div>
       <div className="body">

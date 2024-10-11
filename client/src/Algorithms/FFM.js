@@ -1,4 +1,4 @@
-function FFM(secuencia, numFrames) {
+export default function FFM(secuencia, numFrames) {
     let frames = new Array(numFrames).fill(null); // Inicializa los frames vacíos
     let bitsReferencia = new Array(numFrames).fill(0); // Inicializa los bits de referencia en 0
     let resultado = []; // Estado de los frames por iteración
@@ -42,12 +42,12 @@ function FFM(secuencia, numFrames) {
     };
 }
 
-// Ejemplo de uso
-const secuenciaPaginas = [1, 2, 3, 4, 1, 2, 5, 1];
-const numFrames = 4;
+// // Ejemplo de uso
+// const secuenciaPaginas = [1, 2, 3, 4, 1, 2, 5, 1];
+// const numFrames = 4;
 
-const resultado = FFM(secuenciaPaginas, numFrames);
+// const resultado = FFM(secuenciaPaginas, numFrames);
 
-console.log("Estado de los frames por iteración: ", resultado.framesState);
-console.log("Estado de los bits de referencia por iteración: ", resultado.bitsReferenciaState);
-console.log("Fallos de página: ", resultado.pageFaults);
+// console.log("Estado de los frames por iteración: ", resultado.framesState);
+// console.log("Estado de los bits de referencia por iteración: ", resultado.bitsReferenciaState);
+// console.log("Fallos de página: ", resultado.pageFaults);

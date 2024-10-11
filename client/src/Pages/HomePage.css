@@ -30,6 +30,7 @@ main {
   width: 80vmin;
   border-radius: 10px;
   height: 30px;
+  text-align: center;
 }
 
 .button-container {
@@ -65,3 +66,7 @@ main {
   background-color: #404040;
 }
 
+/* Estilo para el botón activo */
+.Options button.active {
+  background-color: #4d1f1f;
+}

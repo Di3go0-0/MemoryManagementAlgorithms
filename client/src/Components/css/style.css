@@ -1,0 +1,68 @@
+.main {
+  display: flex;
+  width: 100vw;
+  align-items: center;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.input-Frame {
+  display: flex;
+  justify-content: first baseline;
+  align-items: center;
+  width: 80vmin;
+  height: 50px;
+  padding: 10px;
+  margin: 5px;
+}
+.button-Frame {
+  padding-left: 20px;
+}
+
+.input-Frame input {
+  width: 20vmin;
+  border-radius: 10px;
+  height: 30px;
+  text-align: center;
+}
+
+.button-Frame {
+  display: flex;
+  justify-content: center;
+}
+.button-Frame button {
+  border-radius: 10px;
+  width: 50px;
+  height: 30px;
+}
+.button-Frame button:hover {
+  background-color: #404040;
+}
+
+
+
+/* Estilos para la tabla */
+table {
+  width: 100%;
+  border-collapse: collapse; /* Asegura que los bordes de las celdas se colapsen en un solo borde */
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ffffff; /* Define el borde de las celdas */
+  padding: 8px; /* Añade espacio dentro de las celdas */
+  text-align: center; /* Centra el texto dentro de las celdas */
+}
+
+th {
+  background-color: #000000; /* Color de fondo para los encabezados */
+  font-weight: bold; /* Negrita para los encabezados */
+}
+
+tr:nth-child(even) {
+  background-color: #202020; /* Color de fondo para las filas pares */
+}
+
+tr:hover {
+  background-color: #000000; /* Color de fondo al pasar el ratón por encima de una fila */
+}

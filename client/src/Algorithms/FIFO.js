@@ -33,10 +33,11 @@ const Fifo = (List, Frames) => {
     };
 };
 
-// Ejemplo de uso
-const secuence = [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5];
-const frames = 4;
-const result = Fifo(secuence, frames);
+export default Fifo;
+// // Ejemplo de uso
+// const secuence = [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5];
+// const frames = 4;
+// const result = Fifo(secuence, frames);
 
-console.log("Frames State: ", result.framesState);
-console.log("Page Faults: ", result.pageFaults);
+// console.log("Frames State: ", result.framesState);
+// console.log("Page Faults: ", result.pageFaults);
