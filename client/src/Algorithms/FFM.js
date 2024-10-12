@@ -11,30 +11,32 @@ const FFM = (secuencia, numFrames) => {
         const indexPagina = frames.indexOf(pagina); // Verifica si la página ya está en los frames
 
         if (indexPagina !== -1) {
-            // La página ya está en los frames, limpia todos los bits y luego asigna el bit de referencia
-            bitsReferencia.fill(0); // Limpiamos todos los bits de referencia
-            bitsReferencia[indexPagina] = 1; // Asignamos el bit de referencia a la página actual
+            // La página ya está en los frames, actualizamos su bit de referencia
+            if (bitsReferencia[indexPagina] === 0) {
+                // Solo se activa el bit de referencia si estaba en 0
+                bitsReferencia[indexPagina] = 1;
+                
+                // Desactiva el bit de referencia de las demás páginas
+                for (let j = 0; j < numFrames; j++) {
+                    if (j !== indexPagina) {
+                        bitsReferencia[j] = 0; // Desactiva los otros bits de referencia
+                    }
+                }
+            }
         } else {
             // Fallo de página, la página no está en los frames
             pageFaults++;
 
             // Busca la página más vieja para reemplazar
-            let found = false;
-            while (!found) {
-                if (bitsReferencia[indexReemplazo] === 1) {
-                    // Si tiene bit de referencia, se lo quitamos
-                    bitsReferencia[indexReemplazo] = 0;
-                } else {
-                    // Si no tiene bit de referencia, reemplazamos
-                    frames[indexReemplazo] = pagina;
-                    found = true; // Marcamos que ya hemos encontrado el lugar para reemplazar
-                }
-                indexReemplazo = (indexReemplazo + 1) % numFrames;
+            while (bitsReferencia[indexReemplazo] === 1) {
+                bitsReferencia[indexReemplazo] = 0; // Limpia el bit de referencia y sigue buscando
+                indexReemplazo = (indexReemplazo + 1) % numFrames; // Mueve al siguiente frame
             }
 
-            // Después de reemplazar, limpiamos todos los bits y asignamos el bit de referencia a la nueva página
-            bitsReferencia.fill(0); // Limpiamos todos los bits de referencia
-            bitsReferencia[indexReemplazo] = 0; // Se resetea el bit de referencia
+            // Reemplaza la página más antigua
+            frames[indexReemplazo] = pagina;
+            bitsReferencia[indexReemplazo] = 0; // Se resetea el bit de referencia para la nueva página
+            indexReemplazo = (indexReemplazo + 1) % numFrames; // Mueve al siguiente índice de reemplazo
         }
 
         // Guarda el estado actual de los frames y los bits de referencia
@@ -50,8 +52,8 @@ const FFM = (secuencia, numFrames) => {
 };
 
 // Ejemplo de uso
-const secuenciaPaginas = [1, 2, 1, 2];
-const numFrames = 2;
+const secuenciaPaginas = [7, 0, 1, 7, 1, 2];
+const numFrames = 3;
 
 const resultado = FFM(secuenciaPaginas, numFrames);
 
