@@ -10,9 +10,6 @@ function All() {
 
   const { pagesList, showFrame } = useGlobalContext();
 
-  const [inputValue, setInputValue] = useState("");
-  const [showResult, setShowResult] = useState(false);
-
   const [OptimoFramesState, setOptimoFramesState] = useState([]);
   const [OptimoPageFaults, setOptimoPageFaults] = useState(0);
 
@@ -188,37 +185,37 @@ function All() {
   };
 
     const EstadisticasTable = () => {
-    const algorithms = [
-      { name: 'Optimo', faults: OptimoPageFaults },
-      { name: 'FIFO', faults: FifoPageFaults },
-      { name: 'LRU', faults: LruPageFaults },
-      { name: 'FFM', faults: FfmPageFaults },
-    ];
-
+      const algorithms = [
+        { name: 'Optimo', faults: OptimoPageFaults },
+        { name: 'FIFO', faults: FifoPageFaults },
+        { name: 'LRU', faults: LruPageFaults },
+        { name: 'FFM', faults: FfmPageFaults },
+      ];
     
-    // Ordenar los algoritmos por el número de fallos de página (de menor a mayor)
-    algorithms.sort((a, b) => a.faults - b.faults);
-   
-  
-    return (
-      <table>
-        <thead>
-          <tr>
-            <th>Algoritmo</th>
-            <th>Page Faults</th>
-          </tr>
-        </thead>
-        <tbody>
-          {algorithms.map((algorithm, index) => (
-            <tr key={index}>
-              <td>{algorithm.name}</td>
-              <td>{algorithm.faults}</td>
+      // Ordenar los algoritmos por el número de fallos de página (de menor a mayor)
+      algorithms.sort((a, b) => a.faults - b.faults);
+    
+      return (
+        <table>
+          <thead>
+            <tr>
+              <th>Ranking</th>
+              <th>Algoritmo</th>
+              <th>Page Faults</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    );
-  };
+          </thead>
+          <tbody>
+            {algorithms.map((algorithm, index) => (
+              <tr key={index}>
+                <td>{index + 1}°</td>
+                <td>{algorithm.name}</td>
+                <td>{algorithm.faults}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
+    };
 
   return (
     <div className="main">
