@@ -1,36 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useGlobalContext } from "../Context/Context";
-import FFM from "../Algorithms/FFM.js";
+import FFM from "../Algorithms/FFM2.js";
 import "./css/style.css";
 
 function FfmComponent() {
-  const [inputValue, setInputValue] = useState("");
-  const [showResult, setShowResult] = useState(false);
+  const { pagesList, showFrame } = useGlobalContext();
   const [framesState, setFramesState] = useState([]);
   const [pageFaults, setPageFaults] = useState(0);
   const [bitsReferenciaState, setBitsReferenciaState] = useState([]);
 
-  const { pagesList } = useGlobalContext();
+  useEffect(() => {
+    console.log("FfmComponent useEffect called");
+    console.log("pagesList:", pagesList);
+    console.log("frames:", showFrame);
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleButtonClick = () => {
-    const frames = Number(inputValue); // Convertir el valor del input a número
-    if (frames <= 0 || isNaN(frames)) {
-      alert("Por favor, introduce un número válido de frames");
-      return;
+    if (pagesList.length > 0 && showFrame > 0) {
+      const resultado = FFM(pagesList, showFrame);
+      console.log("FFM resultado:", resultado);
+      setFramesState(resultado.framesState || []);
+      setPageFaults(resultado.pageFaults || 0);
+      setBitsReferenciaState(resultado.bitsReferenciaState || []);
     }
-    const resultado = FFM(pagesList, frames);
-    setFramesState(resultado.framesState || []);
-    setBitsReferenciaState(resultado.bitsReferenciaState || []);
-    setPageFaults(resultado.pageFaults || 0);
-    setShowResult(true); // Mostrar el div result
-  };
+  }, [pagesList, showFrame]);
 
   const renderTable = () => {
-    const numRows = Number(inputValue) + 1; // Número de filas (frames + 1 para el título)
+    const numRows = showFrame + 1; // Número de filas (showFrame + 1 para el título)
     const numCols = pagesList.length; // Número de columnas
 
     // Detectar si la página en una celda fue reemplazada
@@ -83,7 +77,7 @@ function FfmComponent() {
                     key={colIndex}
                     style={{
                       backgroundColor: hasPageFault ? "#2c313d" : "transparent",
-                      color: hasReferenceBit ? "black" : "white", // Cambiar color de fondo si tiene bit de referencia
+                      color: hasReferenceBit ? "#00ff15" : "white", // Cambiar color de fondo si tiene bit de referencia
                       fontWeight: hasReferenceBit ? "bold" : "normal", // Cambiar el peso de la fuente si tiene bit de referencia
                     }}
                   >
@@ -102,26 +96,10 @@ function FfmComponent() {
 
   return (
     <div className="main">
-      <div className="input-Frame">
-        <label>
-          <input
-            type="number" // Asegurarse de que el input solo acepte números
-            placeholder="Frames"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
-        </label>
-        <div className="button-Frame">
-          <button onClick={handleButtonClick}>OK</button>
-        </div>
+      <div className="result">
+        <h2>Page Faults: {pageFaults}</h2>
+        {renderTable()}
       </div>
-
-      {showResult && (
-        <div className="result">
-          <h2>Page Faults: {pageFaults}</h2>
-          {renderTable()}
-        </div>
-      )}
     </div>
   );
 }
