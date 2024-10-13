@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../Context/Context";
 import FIFO from "../Algorithms/FIFO.js";
 import "./css/style.css";
@@ -53,10 +53,12 @@ function FifoComponet() {
                     <td
                       key={colIndex}
                       style={{
-                        backgroundColor: isFirstRow ? '#2c313d' : 'transparent', // Solo pinta la primera fila
+                        backgroundColor: isFirstRow ? "#2c313d" : "transparent", // Solo pinta la primera fila
                       }}
                     >
-                      {frame[rowIndex] !== null && frame[rowIndex] !== undefined ? frame[rowIndex] : ""}
+                      {frame[rowIndex] !== null && frame[rowIndex] !== undefined
+                        ? frame[rowIndex]
+                        : ""}
                     </td>
                   );
                 }
@@ -68,10 +70,12 @@ function FifoComponet() {
                   <td
                     key={colIndex}
                     style={{
-                      backgroundColor: hasPageFault ? '#2c313d' : 'transparent',
+                      backgroundColor: hasPageFault ? "#2c313d" : "transparent",
                     }}
                   >
-                    {frame[rowIndex] !== null && frame[rowIndex] !== undefined ? frame[rowIndex] : ""}
+                    {frame[rowIndex] !== null && frame[rowIndex] !== undefined
+                      ? frame[rowIndex]
+                      : ""}
                   </td>
                 );
               })}
@@ -86,7 +90,7 @@ function FifoComponet() {
     <div className="main">
       <div className="result">
         <h2>Page Faults: {pageFaults}</h2>
-        {renderTable()}
+        <div className="Tables">{renderTable()}</div>
       </div>
     </div>
   );
