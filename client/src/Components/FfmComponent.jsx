@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useGlobalContext } from "../Context/Context";
-import FFM from "../Algorithms/FFM2.js";
+import FFM from "../Algorithms/FFM.js";
 import "./css/style.css";
 
 function FfmComponent() {
@@ -98,7 +98,10 @@ function FfmComponent() {
     <div className="main">
       <div className="result">
         <h2>Page Faults: {pageFaults}</h2>
+        <div className="Tables">
+
         {renderTable()}
+        </div>
       </div>
     </div>
   );
