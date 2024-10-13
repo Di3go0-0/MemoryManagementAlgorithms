@@ -115,7 +115,7 @@ function HomePage() {
             className={activeComponent === 'All' ? 'active' : ''}
             onClick={() => setActiveComponent('All')}
           >
-            Todos
+            ALL
           </button>
         </div>
       </div>

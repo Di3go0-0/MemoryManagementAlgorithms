@@ -200,7 +200,7 @@ function All() {
           <thead>
             <tr>
               <th>Ranking</th>
-              <th>Algoritmo</th>
+              <th>Algorithm</th>
               <th>Page Faults</th>
             </tr>
           </thead>
