@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./css/style.css";
 import { useGlobalContext } from "../Context/Context";
-import Optimo from "../Algorithms/Optimo";
+import Optimo from "../Algorithms/Optimo.js";
 import Fifo from "../Algorithms/FIFO.js";
-import FFM from "../Algorithms/FFM";
-import LRU from "../Algorithms/Lru";
+import FFM from "../Algorithms/FFM.js";
+import LRU from "../Algorithms/LRU.js";
 
 function All() {
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./css/style.css";
-import LRU from "../Algorithms/Lru";
+import LRU from "../Algorithms/LRU.js";
 import { useGlobalContext } from "../Context/Context";
 
 function LruComponent() {
