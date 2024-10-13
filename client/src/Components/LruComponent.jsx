@@ -8,6 +8,17 @@ function LruComponent() {
   const [framesState, setFramesState] = useState([]);
   const [pageFaults, setPageFaults] = useState(0);
 
+  const [secondFrames, setSecondFrames] = useState(0); // Estado para la segunda cantidad de frames
+  const [secondFramesState, setSecondFramesState] = useState([]); // Estado para los resultados del segundo frame
+  const [secondPageFaults, setSecondPageFaults] = useState(0); // Estado para los page faults del segundo frame
+
+  const [beladyAnomaly, setBeladyAnomaly] = useState(false); // Estado para la anomalía de Belady
+
+  const handleSecondFramesChange = (e) => {
+    const { value } = e.target;
+    setSecondFrames(Number(value));
+  }
+
   useEffect(() => {
     console.log("LruComponent useEffect called");
     console.log("pagesList:", pagesList);
@@ -19,9 +30,25 @@ function LruComponent() {
       setFramesState(resultado.framesState || []);
       setPageFaults(resultado.pageFaults || 0);
     }
-  }, [pagesList, showFrame]);
 
-  const renderTable = () => {
+    if (pagesList.length > 0 && secondFrames > 0) {
+      const resultado = LRU(pagesList, secondFrames);
+      console.log("LRU resultado para secondFrames:", resultado);
+      setSecondFramesState(resultado.framesState || []);
+      setSecondPageFaults(resultado.pageFaults || 0);
+
+      // Detectar la anomalía de Belady
+      if (secondFrames > showFrame && resultado.pageFaults > pageFaults) {
+        setBeladyAnomaly(true);
+      } else if (showFrame > secondFrames && pageFaults > resultado.pageFaults) {
+        setBeladyAnomaly(true);
+      } else {
+        setBeladyAnomaly(false);
+      }
+    }
+  }, [pagesList, showFrame, secondFrames]);
+
+  const renderTable = (showFrame, framesState ) => {
     const numRows = showFrame + 1;
     const numCols = pagesList.length;
 
@@ -91,8 +118,27 @@ function LruComponent() {
       <div className="result">
           <h2>Page Faults: {pageFaults}</h2>
         <div className="Tables">
-          {renderTable()}
+          {renderTable(showFrame, framesState)}
         </div>
+      </div>
+
+      <div className="extra">
+        <h2>Compare with another Frame quantity </h2>
+        <input
+          type="number"
+          value={secondFrames}
+          onChange={handleSecondFramesChange}
+          placeholder="Enter the number of frames for second table"
+        />
+        {secondFrames > 0 && (
+          <>
+            <h3>Page Faults: {secondPageFaults}</h3>
+            <div className="Tables">{renderTable(secondFrames, secondFramesState)}</div>
+            <div>
+              <h2>Anomalía de Belady: {beladyAnomaly ? "Sí" : "No"}</h2>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
