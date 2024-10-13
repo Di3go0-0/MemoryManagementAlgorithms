@@ -1,36 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useGlobalContext } from "../Context/Context";
-import Optimo from "../Algorithms/Optimo.js";
-import "./css/style.css";
+import Optimo from "../Algorithms/Optimo";
 
 function OptimoComponent() {
-  const [inputValue, setInputValue] = useState("");
-  const [showResult, setShowResult] = useState(false);
+  const { pagesList, showFrame } = useGlobalContext();
   const [framesState, setFramesState] = useState([]);
   const [pageFaults, setPageFaults] = useState(0);
 
-  const { pagesList } = useGlobalContext();
+  useEffect(() => {
+    console.log("OptimoComponent useEffect called");
+    console.log("pagesList:", pagesList);
+    console.log("frames:", showFrame);
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleButtonClick = () => {
-    const frames = Number(inputValue);
-
-    if (frames <= 0 || isNaN(frames)) {
-      alert("Por favor, introduce un número válido de frames");
-      return;
+    if (pagesList.length > 0 && showFrame > 0) {
+      const resultado = Optimo(pagesList, showFrame);
+      console.log("Optimo resultado:", resultado);
+      setFramesState(resultado.framesState || []);
+      setPageFaults(resultado.pageFaults || 0);
     }
-
-    const resultado = Optimo(pagesList, frames);
-    setFramesState(resultado.framesState || []);
-    setPageFaults(resultado.pageFaults || 0);
-    setShowResult(true);
-  };
+  }, [pagesList, showFrame]);
 
   const renderTable = () => {
-    const numRows = Number(inputValue) + 1;
+    const numRows = showFrame + 1;
     const numCols = pagesList.length;
 
     // Detectar si la página en una celda fue reemplazada
@@ -96,27 +87,10 @@ function OptimoComponent() {
 
   return (
     <div className="main">
-      <div className="input-Frame">
-        <label>
-          <input
-            type="number"
-            placeholder="Frames"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
-        </label>
-        <div className="button-Frame">
-          <button onClick={handleButtonClick}>OK</button>
-        </div>
+      <div className="result">
+        <h2>Page Faults: {pageFaults}</h2>
+        {renderTable()}
       </div>
-      {showResult && (
-        <div className="result">
-          <div className="tables">
-            <h2>Page Faults: {pageFaults}</h2>
-            {renderTable()}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
