@@ -38,7 +38,9 @@ function FifoComponet() {
       setSecondPageFaults(resultado.pageFaults || 0);
 
       // Detectar la anomalía de Belady
-      if (resultado.pageFaults > pageFaults) {
+      if (secondFrames > showFrame && resultado.pageFaults > pageFaults) {
+        setBeladyAnomaly(true);
+      } else if (showFrame > secondFrames && pageFaults > resultado.pageFaults) {
         setBeladyAnomaly(true);
       } else {
         setBeladyAnomaly(false);
