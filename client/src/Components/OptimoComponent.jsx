@@ -132,7 +132,7 @@ function OptimoComponent() {
             <h3>Page Faults: {secondPageFaults}</h3>
             <div className="Tables">{renderTable(secondFrames, secondFramesState)}</div>
             <div>
-              <h2>Anomalía de Belady: {beladyAnomaly ? "Sí" : "No"}</h2>
+              <h2>Belady Anomaly: {beladyAnomaly ? "Sí" : "No"}</h2>
             </div>
           </>
         )}
