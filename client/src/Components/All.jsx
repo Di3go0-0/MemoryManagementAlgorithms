@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./css/style.css";
 import { useGlobalContext } from "../Context/Context";
 import Optimo from "../Algorithms/Optimo";
@@ -7,14 +7,17 @@ import FFM from "../Algorithms/FFM";
 import LRU from "../Algorithms/Lru";
 
 function All() {
+
+  const { pagesList, showFrame } = useGlobalContext();
+
   const [inputValue, setInputValue] = useState("");
   const [showResult, setShowResult] = useState(false);
 
-  const [FifoFramesState, setFifoFramesState] = useState([]);
-  const [FifoPageFaults, setFifoPageFaults] = useState(0);
-
   const [OptimoFramesState, setOptimoFramesState] = useState([]);
   const [OptimoPageFaults, setOptimoPageFaults] = useState(0);
+
+  const [FifoFramesState, setFifoFramesState] = useState([]);
+  const [FifoPageFaults, setFifoPageFaults] = useState(0);
 
   const [LruFramesState, setLruFramesState] = useState([]);
   const [LruPageFaults, setLruPageFaults] = useState(0);
@@ -23,41 +26,37 @@ function All() {
   const [FfmPageFaults, setFfmPageFaults] = useState(0);
   const [bitsReferenciaState, setBitsReferenciaState] = useState([]);
 
-  const { pagesList } = useGlobalContext();
+  useEffect(() => {
+    console.log("All useEffect called");
+    console.log("pagesList:", pagesList);
+    console.log("frames:", showFrame);
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
+    if (pagesList.length > 0 && showFrame > 0) {
+      const resultadoOptimo = Optimo(pagesList, showFrame);
+      console.log("Optimo resultado:", resultadoOptimo);
+      setOptimoFramesState(resultadoOptimo.framesState || []);
+      setOptimoPageFaults(resultadoOptimo.pageFaults || 0);
 
-  const handleButtonClick = () => {
-    const frames = Number(inputValue); // Convertir el valor del input a número
-    if (frames <= 0 || isNaN(frames)) {
-      alert("Por favor, introduce un número válido de frames");
-      return;
+      const resultadoFifo = Fifo(pagesList, showFrame);
+      console.log("Fifo resultado:", resultadoFifo);
+      setFifoFramesState(resultadoFifo.framesState || []);
+      setFifoPageFaults(resultadoFifo.pageFaults || 0);
+
+      const resultadoLru = LRU(pagesList, showFrame);
+      console.log("LRU resultado:", resultadoLru);
+      setLruFramesState(resultadoLru.framesState || []);
+      setLruPageFaults(resultadoLru.pageFaults || 0);
+
+      const resultadoFfm = FFM(pagesList, showFrame);
+      console.log("FFM resultado:", resultadoFfm);
+      setFfmFramesState(resultadoFfm.framesState || []);
+      setFfmPageFaults(resultadoFfm.pageFaults || 0);
+      setBitsReferenciaState(resultadoFfm.bitsReferenciaState || []);
     }
-
-    const resultadoFifo = Fifo(pagesList, frames);
-    setFifoFramesState(resultadoFifo.framesState || []);
-    setFifoPageFaults(resultadoFifo.pageFaults || 0);
-
-    const resultadoOptimo = Optimo(pagesList, frames);
-    setOptimoFramesState(resultadoOptimo.framesState || []);
-    setOptimoPageFaults(resultadoOptimo.pageFaults || 0);
-
-    const resultadoLru = LRU(pagesList, frames);
-    setLruFramesState(resultadoLru.framesState || []);
-    setLruPageFaults(resultadoLru.pageFaults || 0);
-
-    const resultadoFfm = FFM(pagesList, frames);
-    setFfmFramesState(resultadoFfm.framesState || []);
-    setBitsReferenciaState(resultadoFfm.bitsReferenciaState || []);
-    setFfmPageFaults(resultadoFfm.pageFaults || 0);
-
-    setShowResult(true); // Mostrar el div result
-  };
+  }, [pagesList, showFrame]);
 
   const FFMRender = () => {
-    const numRows = Number(inputValue) + 1; // Número de filas (frames + 1 para el título)
+    const numRows = showFrame + 1; // Número de filas (frames + 1 para el título)
     const numCols = pagesList.length; // Número de columnas
 
     // Detectar si la página en una celda fue reemplazada
@@ -91,7 +90,7 @@ function All() {
                       key={colIndex}
                       style={{
                         backgroundColor: isFirstRow ? "#2c313d" : "transparent", // Solo pinta la primera fila
-                        color: hasReferenceBit ? "black" : "white", // Cambiar color de fondo si tiene bit de referencia
+                        color: hasReferenceBit ? "#00ff15" : "white", // Cambiar color de fondo si tiene bit de referencia
                         fontWeight: hasReferenceBit ? "bold" : "normal", // Cambiar el peso de la fuente si tiene bit de referencia
                       }}
                     >
@@ -110,7 +109,7 @@ function All() {
                     key={colIndex}
                     style={{
                       backgroundColor: hasPageFault ? "#2c313d" : "transparent",
-                      color: hasReferenceBit ? "black" : "white", // Cambiar color de fondo si tiene bit de referencia
+                      color: hasReferenceBit ? "#00ff15" : "white", // Cambiar color de fondo si tiene bit de referencia
                       fontWeight: hasReferenceBit ? "bold" : "normal", // Cambiar el peso de la fuente si tiene bit de referencia
                     }}
                   >
@@ -128,7 +127,7 @@ function All() {
   };
 
   const RenderTable = (framesState) => {
-    const numRows = Number(inputValue) + 1
+    const numRows = showFrame + 1
     const numCols = pagesList.length
 
     // Detectar si la página en una celda fue reemplazada
@@ -195,9 +194,11 @@ function All() {
       { name: 'LRU', faults: LruPageFaults },
       { name: 'FFM', faults: FfmPageFaults },
     ];
-  
+
+    
     // Ordenar los algoritmos por el número de fallos de página (de menor a mayor)
     algorithms.sort((a, b) => a.faults - b.faults);
+   
   
     return (
       <table>
@@ -221,48 +222,32 @@ function All() {
 
   return (
     <div className="main">
-      <div className="input-Frame">
-        <label>
-          <input
-            type="number" // Asegurarse de que el input solo acepte números
-            placeholder="Frames"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
-        </label>
-        <div className="button-Frame">
-          <button onClick={handleButtonClick}>OK</button>
-        </div>
-      </div>
-
-      {showResult && (
         <div className="result">
-          <div className="Tables">
             <h1>Optimo</h1>
             <h2>Page Faults: {OptimoPageFaults}</h2>
+          <div className="Tables">
             {RenderTable(OptimoFramesState)}
           </div>
-          <div className="Tables">
             <h1>FIFO</h1>
             <h2>Page Faults: {FifoPageFaults}</h2>
+          <div className="Tables">
             {RenderTable(FifoFramesState)}
           </div>
-          <div className="Tables">
             <h1>LRU</h1>
             <h2>Page Faults: {LruPageFaults}</h2>
+          <div className="Tables">
             {RenderTable(LruFramesState)}
           </div>
-          <div className="Tables">
             <h1>FFM</h1>
             <h2>Page Faults: {FfmPageFaults}</h2>
+          <div className="Tables">
             {FFMRender()}
           </div>
-          <div className="Tables">
             <h1>Statistcs</h1>
+          <div className="Tables">
             {EstadisticasTable()}
           </div>
         </div>
-      )}
     </div>
   );
 }
