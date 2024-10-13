@@ -89,7 +89,7 @@ function OptimoComponent() {
     <div className="main">
       <div className="result">
         <h2>Page Faults: {pageFaults}</h2>
-        {renderTable()}
+        <div className="Tables">{renderTable()}</div>
       </div>
     </div>
   );
