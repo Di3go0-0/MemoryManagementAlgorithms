@@ -110,3 +110,17 @@ main {
   background-color: var(--hover-color);
   color: var(--text-color);
 }
+
+.Frames {
+  max-width: 12vh;
+  input{
+    max-width: 12vh;
+  }
+}
+
+.Pages{
+  max-width: 70vh;
+  input{
+    max-width: 70vh;
+  }
+}

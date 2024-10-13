@@ -10,11 +10,16 @@ import "./HomePage.css";
 
 function HomePage() {
   const [inputValue, setInputValue] = useState("");
+  const [frameValue, setFrameValue] = useState("");
   const [activeComponent, setActiveComponent] = useState(null);
-  const { addPages } = useGlobalContext();
+  const { addPages, addFrames } = useGlobalContext();
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
+  };
+
+  const handleFrameChange = (event) => {
+    setFrameValue(event.target.value);
   };
 
   const handleButtonClick = () => {
@@ -24,8 +29,13 @@ function HomePage() {
       return;
     }
     addPages(pages);
+    const frames = Number(frameValue);
+    if (frames <= 0 || isNaN(frames)) {
+      alert("Por favor, introduce un número válido de frames");
+      return;
+    }
+    addFrames(frames);
   };
-
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
@@ -47,12 +57,20 @@ function HomePage() {
   return (
     <main>
       <div className="input-container">
-        <label>
+        <label className="Pages">
           <input
             type="text"
             placeholder="Introducir las páginas separadas por espacio"
             value={inputValue}
             onChange={handleInputChange}
+          />
+        </label>
+        <label className="Frames">
+          <input
+            type="number"
+            placeholder="Frames"
+            value={frameValue}
+            onChange={handleFrameChange}
           />
         </label>
         <div className="button-container">
