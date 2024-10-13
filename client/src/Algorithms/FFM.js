@@ -1,64 +1,95 @@
 const FFM = (secuencia, numFrames) => {
-    let frames = new Array(numFrames).fill(null); // Inicializa los frames vacíos
-    let bitsReferencia = new Array(numFrames).fill(0); // Inicializa los bits de referencia en 0
-    let resultado = []; // Estado de los frames por iteración
-    let bitsResultado = []; // Estado de los bits de referencia por iteración
-    let pageFaults = 0; // Contador de fallos de página
-    let indexReemplazo = 0; // Índice para llevar el control del reemplazo en orden FIFO
+    const frames = Array(numFrames).fill(null);
+    const bitsReferencia = Array(numFrames).fill(0);
+    const posiciones = Array(numFrames).fill(null);
+    const resultado = [];
+    const bitsResultado = [];
+    const posicionesResultado = [];
+    let pageFaults = 0;
+    let iteracion = 0;
 
     for (let i = 0; i < secuencia.length; i++) {
         const pagina = secuencia[i];
-        const indexPagina = frames.indexOf(pagina); // Verifica si la página ya está en los frames
+        let encontrado = false;
 
-        if (indexPagina !== -1) {
-            // La página ya está en los frames, actualizamos su bit de referencia
-            if (bitsReferencia[indexPagina] === 0) {
-                // Solo se activa el bit de referencia si estaba en 0
-                bitsReferencia[indexPagina] = 1;
-                
-                // Desactiva el bit de referencia de las demás páginas
-                for (let j = 0; j < numFrames; j++) {
-                    if (j !== indexPagina) {
-                        bitsReferencia[j] = 0; // Desactiva los otros bits de referencia
+        // Verificar si la página ya está en los frames
+        for (let j = 0; j < numFrames; j++) {
+            if (frames[j] === pagina) {
+                encontrado = true;
+                // Asignar bit de referencia si ya está en los frames
+                bitsReferencia[j] = 1;  // Asignar el bit de referencia a la página encontrada
+                // Resetear el bit de referencia de la página anterior
+                for (let k = 0; k < numFrames; k++) {
+                    if (k !== j) {
+                        bitsReferencia[k] = 0;
                     }
                 }
+                break;
             }
-        } else {
-            // Fallo de página, la página no está en los frames
-            pageFaults++;
-
-            // Busca la página más vieja para reemplazar
-            while (bitsReferencia[indexReemplazo] === 1) {
-                bitsReferencia[indexReemplazo] = 0; // Limpia el bit de referencia y sigue buscando
-                indexReemplazo = (indexReemplazo + 1) % numFrames; // Mueve al siguiente frame
-            }
-
-            // Reemplaza la página más antigua
-            frames[indexReemplazo] = pagina;
-            bitsReferencia[indexReemplazo] = 0; // Se resetea el bit de referencia para la nueva página
-            indexReemplazo = (indexReemplazo + 1) % numFrames; // Mueve al siguiente índice de reemplazo
         }
 
-        // Guarda el estado actual de los frames y los bits de referencia
-        resultado.push([...frames]); // Clona el estado de los frames
-        bitsResultado.push([...bitsReferencia]); // Clona el estado de los bits de referencia
+        // Si la página no está en los frames
+        if (!encontrado) {
+            pageFaults++; // Aumentar contador de fallos de página
+
+            // Buscar un espacio vacío en los frames
+            const espacioVacioIndex = frames.findIndex(frame => frame === null);
+            if (espacioVacioIndex !== -1) {
+                // Insertar la nueva página en el espacio vacío
+                frames[espacioVacioIndex] = pagina;
+                bitsReferencia[espacioVacioIndex] = 0; // No se asigna ningún bit de referencia
+                posiciones[espacioVacioIndex] = pagina;  // Añadir la nueva página como la más reciente
+            } else {
+                // Si no hay espacio, encontrar la página más vieja sin bit de referencia
+                let reemplazada = false;
+                const posicionesAnteriores = posicionesResultado[iteracion] || posiciones;
+                while (!reemplazada) {
+                    const paginaMasVieja = posicionesAnteriores[0];  // Tomar la página más vieja
+                    const indexViejo = frames.indexOf(paginaMasVieja); // Encontrar la página más vieja en los frames
+
+                    if (bitsReferencia[indexViejo] === 0) {
+                        // Si no tiene bit de referencia, reemplazarla
+                        frames[indexViejo] = pagina;  // Reemplazar la página en los frames
+                        bitsReferencia[indexViejo] = 0;  // Resetear el bit de referencia
+                        posiciones.shift();  // Eliminar la página más vieja de la lista
+                        posiciones.push(pagina);  // La nueva página se convierte en la más reciente
+                        reemplazada = true;
+                    } else {
+                        // Si tiene bit de referencia, quitar el bit pero no moverla
+                        bitsReferencia[indexViejo] = 0;
+                        
+                        const segundaPaginaMasVieja = posicionesAnteriores[1];  // Tomar la segunda página más vieja
+                        const indexSegundoViejo = frames.indexOf(segundaPaginaMasVieja); // Encontrar la segunda página más vieja en los frames
+                        
+                        frames[indexSegundoViejo] = pagina;  // Reemplazar pagina en la segunda página más vieja
+                        bitsReferencia[indexSegundoViejo] = 0;  // Resetear el bit de referencia
+                        posiciones.splice(1, 1)
+                        posiciones.push(pagina);  // La nueva página se convierte en la más reciente
+                        reemplazada = true;
+                    }
+                }   
+            }
+        }
+
+        // Guardar el estado actual de los frames, bits de referencia y posiciones
+        resultado.push([...frames]);
+        bitsResultado.push([...bitsReferencia]);
+        posicionesResultado.push([...posiciones]);
+        iteracion++; // Incrementar el contador de iteraciones
     }
 
     return {
         framesState: resultado,
         bitsReferenciaState: bitsResultado,
+        posicionesState: posicionesResultado,
         pageFaults: pageFaults
     };
 };
 
 // Ejemplo de uso
-const secuenciaPaginas = [7, 0, 1, 7, 1, 2];
+const secuencia = [7, 0, 1, 2, 0, 3, 1];
 const numFrames = 3;
-
-const resultado = FFM(secuenciaPaginas, numFrames);
-
-console.log("Estado de los frames por iteración: ", resultado.framesState);
-console.log("Estado de los bits de referencia por iteración: ", resultado.bitsReferenciaState);
-console.log("Fallos de página: ", resultado.pageFaults);
+const resultado = FFM(secuencia, numFrames);
+console.log(resultado);
 
 export default FFM;
