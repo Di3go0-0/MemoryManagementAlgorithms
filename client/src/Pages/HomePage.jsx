@@ -13,6 +13,7 @@ function HomePage() {
   const [frameValue, setFrameValue] = useState("");
   const [activeComponent, setActiveComponent] = useState(null);
   const { addPages, addFrames } = useGlobalContext();
+  const [error, setError] = useState(false);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -31,9 +32,11 @@ function HomePage() {
     addPages(pages);
     const frames = Number(frameValue);
     if (frames <= 0 || isNaN(frames)) {
-      alert("Por favor, introduce un número válido de frames");
+      // alert("Por favor, introduce un número válido de frames");
+      setError(true);
       return;
     }
+    setError(false);
     addFrames(frames);
   };
 
@@ -56,6 +59,7 @@ function HomePage() {
 
   return (
     <main>
+        {error && <p className="error">Enter the correct data</p>}
       <div className="input-container">
         <label className="Pages">
           <input

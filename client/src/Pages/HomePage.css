@@ -124,3 +124,8 @@ main {
     max-width: 70vh;
   }
 }
+
+main p{
+  margin-top: 20px;
+  color: red;
+}
