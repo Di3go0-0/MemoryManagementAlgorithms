@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useGlobalContext } from "../Context/Context";
-import Optimo from "../Algorithms/Optimo";
+import { useState, useEffect } from "react";
+import { useGlobalContext } from "../Context";
+import { Optimo } from "../Algorithms";
 
-function OptimoComponent() {
+export function OptimoComponent() {
   const { pagesList, showFrame } = useGlobalContext();
   const [framesState, setFramesState] = useState([]);
   const [pageFaults, setPageFaults] = useState(0);
@@ -16,7 +16,7 @@ function OptimoComponent() {
   const handleSecondFramesChange = (e) => {
     const { value } = e.target;
     setSecondFrames(Number(value));
-  }
+  };
 
   useEffect(() => {
     console.log("OptimoComponent useEffect called");
@@ -39,17 +39,19 @@ function OptimoComponent() {
       // Detectar la anomalía de Belady
       if (secondFrames > showFrame && resultado.pageFaults > pageFaults) {
         setBeladyAnomaly(true);
-      } else if (showFrame > secondFrames && pageFaults > resultado.pageFaults) {
+      } else if (
+        showFrame > secondFrames &&
+        pageFaults > resultado.pageFaults
+      ) {
         setBeladyAnomaly(true);
       } else {
         setBeladyAnomaly(false);
       }
     }
-  }, [pagesList, showFrame, secondFrames]);
+  }, [pagesList, showFrame, secondFrames, pageFaults]);
 
-  const renderTable = (showFrame, framesState ) => {
+  const renderTable = (showFrame, framesState) => {
     const numRows = showFrame + 1;
-    const numCols = pagesList.length;
 
     // Detectar si la página en una celda fue reemplazada
     const isPageFault = (currentFrame, prevFrame, rowIndex) => {
@@ -130,7 +132,9 @@ function OptimoComponent() {
         {secondFrames > 0 && (
           <>
             <h3>Page Faults: {secondPageFaults}</h3>
-            <div className="Tables">{renderTable(secondFrames, secondFramesState)}</div>
+            <div className="Tables">
+              {renderTable(secondFrames, secondFramesState)}
+            </div>
             <div>
               <h2>Belady Anomaly: {beladyAnomaly ? "Sí" : "No"}</h2>
             </div>
@@ -141,4 +145,3 @@ function OptimoComponent() {
   );
 }
 
-export default OptimoComponent;

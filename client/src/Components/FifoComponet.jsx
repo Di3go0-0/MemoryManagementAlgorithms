@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useGlobalContext } from "../Context/Context";
-import FIFO from "../Algorithms/FIFO.js";
+import { useEffect, useState } from "react";
+import { useGlobalContext } from "../Context";
+import { FIFO } from "../Algorithms";
 import "./css/style.css";
 
-function FifoComponet() {
+export function FifoComponet() {
   const { pagesList, showFrame } = useGlobalContext();
   const [framesState, setFramesState] = useState([]);
   const [pageFaults, setPageFaults] = useState(0);
@@ -17,7 +17,7 @@ function FifoComponet() {
   const handleSecondFramesChange = (e) => {
     const { value } = e.target;
     setSecondFrames(Number(value));
-  }
+  };
 
   useEffect(() => {
     console.log("FifoComponent useEffect called");
@@ -40,18 +40,19 @@ function FifoComponet() {
       // Detectar la anomalía de Belady
       if (secondFrames > showFrame && resultado.pageFaults > pageFaults) {
         setBeladyAnomaly(true);
-      } else if (showFrame > secondFrames && pageFaults > resultado.pageFaults) {
+      } else if (
+        showFrame > secondFrames &&
+        pageFaults > resultado.pageFaults
+      ) {
         setBeladyAnomaly(true);
       } else {
         setBeladyAnomaly(false);
       }
     }
+  }, [pagesList, showFrame, secondFrames, pageFaults]);
 
-  }, [pagesList, showFrame, secondFrames]);
-
-  const renderTable = (showFrame, framesState ) => {
+  const renderTable = (showFrame, framesState) => {
     const numRows = showFrame + 1;
-    const numCols = pagesList.length;
 
     // Detectar si la página en una celda fue reemplazada
     const isPageFault = (currentFrame, prevFrame, rowIndex) => {
@@ -132,7 +133,9 @@ function FifoComponet() {
         {secondFrames > 0 && (
           <>
             <h3>Page Faults: {secondPageFaults}</h3>
-            <div className="Tables">{renderTable(secondFrames, secondFramesState)}</div>
+            <div className="Tables">
+              {renderTable(secondFrames, secondFramesState)}
+            </div>
             <div>
               <h2>Belady Anomaly: {beladyAnomaly ? "Sí" : "No"}</h2>
             </div>
@@ -142,5 +145,3 @@ function FifoComponet() {
     </div>
   );
 }
-
-export default FifoComponet;

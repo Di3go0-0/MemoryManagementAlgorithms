@@ -1,14 +1,6 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState } from "react";
 
 export const Context = createContext();
-
-export const useGlobalContext = () => {
-  const contexto = useContext(Context);
-  if (!contexto) {
-    return;
-  }
-  return contexto;
-};
 
 export const ContextProvider = ({ children }) => {
   const [pagesList, setPagesList] = useState([]);
@@ -16,7 +8,7 @@ export const ContextProvider = ({ children }) => {
 
   const addPages = (pages) => {
     setPagesList(pages);
-    console.log("Pages list:");
+    console.log();
     console.log(pages);
   };
 
@@ -32,3 +24,4 @@ export const ContextProvider = ({ children }) => {
     </Context.Provider>
   );
 };
+

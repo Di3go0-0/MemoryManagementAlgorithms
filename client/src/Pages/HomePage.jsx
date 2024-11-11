@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { useGlobalContext } from "../Context/Context";
-import OptimoComponent from "../Components/OptimoComponent";
-import FifoComponet from "../Components/FifoComponet";
-import LruComponent from "../Components/LruComponent";
-import FfmComponent from "../Components/FfmComponent";
-import All from "../Components/All";
+import { useState } from "react";
+import { useGlobalContext } from "../Context";
+import { OptimoComponent } from "../Components";
+import { FifoComponet } from "../Components";
+import { LruComponent } from "../Components";
+import { FfmComponent } from "../Components";
+import { All } from "../Components/All";
 
 import "./HomePage.css";
 
@@ -24,8 +24,12 @@ function HomePage() {
   };
 
   const handleButtonClick = () => {
-    const pages = inputValue.trim().split(/\s+/).map(Number).filter(n => !isNaN(n));
-    if (pages.length === 0 || pages.some(n => n < 0)) {
+    const pages = inputValue
+      .trim()
+      .split(/\s+/)
+      .map(Number)
+      .filter((n) => !isNaN(n));
+    if (pages.length === 0 || pages.some((n) => n < 0)) {
       alert("Por favor, introduce páginas válidas");
       return;
     }
@@ -42,15 +46,15 @@ function HomePage() {
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
-      case 'Optimo':
+      case "Optimo":
         return <OptimoComponent />;
-      case 'FIFO':
+      case "FIFO":
         return <FifoComponet />;
-      case 'LRU':
+      case "LRU":
         return <LruComponent />;
-      case 'FFM':
+      case "FFM":
         return <FfmComponent />;
-      case 'All':
+      case "All":
         return <All />;
       default:
         return null;
@@ -59,7 +63,7 @@ function HomePage() {
 
   return (
     <main>
-        {error && <p className="error">Enter the correct data</p>}
+      {error && <p className="error">Enter the correct data</p>}
       <div className="input-container">
         <label className="Pages">
           <input
@@ -84,50 +88,49 @@ function HomePage() {
       <div className="Options">
         <div>
           <button
-            className={activeComponent === 'Optimo' ? 'active' : ''}
-            onClick={() => setActiveComponent('Optimo')}
+            className={activeComponent === "Optimo" ? "active" : ""}
+            onClick={() => setActiveComponent("Optimo")}
           >
             Optimo
           </button>
         </div>
         <div>
           <button
-            className={activeComponent === 'FIFO' ? 'active' : ''}
-            onClick={() => setActiveComponent('FIFO')}
+            className={activeComponent === "FIFO" ? "active" : ""}
+            onClick={() => setActiveComponent("FIFO")}
           >
             FIFO
           </button>
         </div>
         <div>
           <button
-            className={activeComponent === 'LRU' ? 'active' : ''}
-            onClick={() => setActiveComponent('LRU')}
+            className={activeComponent === "LRU" ? "active" : ""}
+            onClick={() => setActiveComponent("LRU")}
           >
             LRU
           </button>
         </div>
         <div>
           <button
-            className={activeComponent === 'FFM' ? 'active' : ''}
-            onClick={() => setActiveComponent('FFM')}
+            className={activeComponent === "FFM" ? "active" : ""}
+            onClick={() => setActiveComponent("FFM")}
           >
             FFM
           </button>
         </div>
         <div>
           <button
-            className={activeComponent === 'All' ? 'active' : ''}
-            onClick={() => setActiveComponent('All')}
+            className={activeComponent === "All" ? "active" : ""}
+            onClick={() => setActiveComponent("All")}
           >
             ALL
           </button>
         </div>
       </div>
-      <div className="body">
-        {renderActiveComponent()}
-      </div>
+      <div className="body">{renderActiveComponent()}</div>
     </main>
   );
 }
 
 export default HomePage;
+

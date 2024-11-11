@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./css/style.css";
-import LRU from "../Algorithms/LRU.js";
+import { LRU } from "../Algorithms";
+import { useGlobalContext } from "../Context";
 
-import { useGlobalContext } from "../Context/Context";
-
-function LruComponent() {
+export function LruComponent() {
   const { pagesList, showFrame } = useGlobalContext();
   const [framesState, setFramesState] = useState([]);
   const [pageFaults, setPageFaults] = useState(0);
@@ -18,7 +17,7 @@ function LruComponent() {
   const handleSecondFramesChange = (e) => {
     const { value } = e.target;
     setSecondFrames(Number(value));
-  }
+  };
 
   useEffect(() => {
     console.log("LruComponent useEffect called");
@@ -41,17 +40,19 @@ function LruComponent() {
       // Detectar la anomalía de Belady
       if (secondFrames > showFrame && resultado.pageFaults > pageFaults) {
         setBeladyAnomaly(true);
-      } else if (showFrame > secondFrames && pageFaults > resultado.pageFaults) {
+      } else if (
+        showFrame > secondFrames &&
+        pageFaults > resultado.pageFaults
+      ) {
         setBeladyAnomaly(true);
       } else {
         setBeladyAnomaly(false);
       }
     }
-  }, [pagesList, showFrame, secondFrames]);
+  }, [pagesList, showFrame, secondFrames, pageFaults]);
 
-  const renderTable = (showFrame, framesState ) => {
+  const renderTable = (showFrame, framesState) => {
     const numRows = showFrame + 1;
-    const numCols = pagesList.length;
 
     // Detectar si la página en una celda fue reemplazada
     const isPageFault = (currentFrame, prevFrame, rowIndex) => {
@@ -117,10 +118,8 @@ function LruComponent() {
   return (
     <div className="main">
       <div className="result">
-          <h2>Page Faults: {pageFaults}</h2>
-        <div className="Tables">
-          {renderTable(showFrame, framesState)}
-        </div>
+        <h2>Page Faults: {pageFaults}</h2>
+        <div className="Tables">{renderTable(showFrame, framesState)}</div>
       </div>
 
       <div className="extra">
@@ -134,7 +133,9 @@ function LruComponent() {
         {secondFrames > 0 && (
           <>
             <h3>Page Faults: {secondPageFaults}</h3>
-            <div className="Tables">{renderTable(secondFrames, secondFramesState)}</div>
+            <div className="Tables">
+              {renderTable(secondFrames, secondFramesState)}
+            </div>
             <div>
               <h2>Belady Anomaly: {beladyAnomaly ? "Sí" : "No"}</h2>
             </div>
@@ -144,5 +145,3 @@ function LruComponent() {
     </div>
   );
 }
-
-export default LruComponent;

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./css/style.css";
-import { useGlobalContext } from "../Context/Context";
-import Optimo from "../Algorithms/Optimo.js";
-import Fifo from "../Algorithms/FIFO.js";
-import FFM from "../Algorithms/FFM.js";
-import LRU from "../Algorithms/LRU.js";
+import { useGlobalContext } from "../Context";
+import { Optimo } from "../Algorithms";
+import { FIFO } from "../Algorithms";
+import { FFM } from "../Algorithms";
+import { LRU } from "../Algorithms";
 
-function All() {
-
+export function All() {
   const { pagesList, showFrame } = useGlobalContext();
 
   const [OptimoFramesState, setOptimoFramesState] = useState([]);
@@ -34,7 +33,7 @@ function All() {
       setOptimoFramesState(resultadoOptimo.framesState || []);
       setOptimoPageFaults(resultadoOptimo.pageFaults || 0);
 
-      const resultadoFifo = Fifo(pagesList, showFrame);
+      const resultadoFifo = FIFO(pagesList, showFrame);
       console.log("Fifo resultado:", resultadoFifo);
       setFifoFramesState(resultadoFifo.framesState || []);
       setFifoPageFaults(resultadoFifo.pageFaults || 0);
@@ -54,7 +53,6 @@ function All() {
 
   const FFMRender = () => {
     const numRows = showFrame + 1; // Número de filas (frames + 1 para el título)
-    const numCols = pagesList.length; // Número de columnas
 
     // Detectar si la página en una celda fue reemplazada
     const isPageFault = (currentFrame, prevFrame, rowIndex) => {
@@ -124,14 +122,13 @@ function All() {
   };
 
   const RenderTable = (framesState) => {
-    const numRows = showFrame + 1
-    const numCols = pagesList.length
+    const numRows = showFrame + 1;
 
     // Detectar si la página en una celda fue reemplazada
     const isPageFault = (currentFrame, prevFrame, rowIndex) => {
-      if (!prevFrame) return false // No hay frame anterior en la primera iteración
-      return currentFrame[rowIndex] !== prevFrame[rowIndex] // Solo verifica cambios en la posición específica
-    }
+      if (!prevFrame) return false; // No hay frame anterior en la primera iteración
+      return currentFrame[rowIndex] !== prevFrame[rowIndex]; // Solo verifica cambios en la posición específica
+    };
 
     return (
       <table>
@@ -146,107 +143,99 @@ function All() {
           {Array.from({ length: numRows - 1 }).map((_, rowIndex) => (
             <tr key={rowIndex}>
               {framesState.map((frame, colIndex) => {
-                const prevFrame = framesState[colIndex - 1] || [] // Frame anterior
+                const prevFrame = framesState[colIndex - 1] || []; // Frame anterior
 
                 // Para la primera columna (colIndex === 0), pintar la primera fila del tbody (rowIndex === 0)
                 if (colIndex === 0) {
-                  const isFirstRow = rowIndex === 0 // Verificar si estamos en la primera fila del tbody
+                  const isFirstRow = rowIndex === 0; // Verificar si estamos en la primera fila del tbody
                   return (
                     <td
                       key={colIndex}
                       style={{
-                        backgroundColor: isFirstRow ? '#2c313d' : 'transparent' // Solo pinta la primera fila
+                        backgroundColor: isFirstRow ? "#2c313d" : "transparent", // Solo pinta la primera fila
                       }}
                     >
-                      {frame[rowIndex] !== null && frame[rowIndex] !== undefined ? frame[rowIndex] : ""}
+                      {frame[rowIndex] !== null && frame[rowIndex] !== undefined
+                        ? frame[rowIndex]
+                        : ""}
                     </td>
-                  )
+                  );
                 }
 
                 // Para las demás columnas, verificar page faults
-                const hasPageFault = isPageFault(frame, prevFrame, rowIndex)
+                const hasPageFault = isPageFault(frame, prevFrame, rowIndex);
 
                 return (
                   <td
                     key={colIndex}
                     style={{
-                      backgroundColor: hasPageFault ? '#2c313d' : 'transparent'
+                      backgroundColor: hasPageFault ? "#2c313d" : "transparent",
                     }}
                   >
-                    {frame[rowIndex] !== null && frame[rowIndex] !== undefined ? frame[rowIndex] : ""}
+                    {frame[rowIndex] !== null && frame[rowIndex] !== undefined
+                      ? frame[rowIndex]
+                      : ""}
                   </td>
-                )
+                );
               })}
             </tr>
           ))}
         </tbody>
       </table>
-    )
+    );
   };
 
-    const EstadisticasTable = () => {
-      const algorithms = [
-        { name: 'Optimo', faults: OptimoPageFaults },
-        { name: 'FIFO', faults: FifoPageFaults },
-        { name: 'LRU', faults: LruPageFaults },
-        { name: 'FFM', faults: FfmPageFaults },
-      ];
-    
-      // Ordenar los algoritmos por el número de fallos de página (de menor a mayor)
-      algorithms.sort((a, b) => a.faults - b.faults);
-    
-      return (
-        <table>
-          <thead>
-            <tr>
-              <th>Ranking</th>
-              <th>Algorithm</th>
-              <th>Page Faults</th>
+  const EstadisticasTable = () => {
+    const algorithms = [
+      { name: "Optimo", faults: OptimoPageFaults },
+      { name: "FIFO", faults: FifoPageFaults },
+      { name: "LRU", faults: LruPageFaults },
+      { name: "FFM", faults: FfmPageFaults },
+    ];
+
+    // Ordenar los algoritmos por el número de fallos de página (de menor a mayor)
+    algorithms.sort((a, b) => a.faults - b.faults);
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Ranking</th>
+            <th>Algorithm</th>
+            <th>Page Faults</th>
+          </tr>
+        </thead>
+        <tbody>
+          {algorithms.map((algorithm, index) => (
+            <tr key={index}>
+              <td>{index + 1}°</td>
+              <td>{algorithm.name}</td>
+              <td>{algorithm.faults}</td>
             </tr>
-          </thead>
-          <tbody>
-            {algorithms.map((algorithm, index) => (
-              <tr key={index}>
-                <td>{index + 1}°</td>
-                <td>{algorithm.name}</td>
-                <td>{algorithm.faults}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      );
-    };
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
     <div className="main">
-        <div className="result">
-            <h1>Optimo</h1>
-            <h2>Page Faults: {OptimoPageFaults}</h2>
-          <div className="Tables">
-            {RenderTable(OptimoFramesState)}
-          </div>
-            <h1>FIFO</h1>
-            <h2>Page Faults: {FifoPageFaults}</h2>
-          <div className="Tables">
-            {RenderTable(FifoFramesState)}
-          </div>
-            <h1>LRU</h1>
-            <h2>Page Faults: {LruPageFaults}</h2>
-          <div className="Tables">
-            {RenderTable(LruFramesState)}
-          </div>
-            <h1>FFM</h1>
-            <h2>Page Faults: {FfmPageFaults}</h2>
-          <div className="Tables">
-            {FFMRender()}
-          </div>
-            <h1>Statistcs</h1>
-          <div className="Tables">
-            {EstadisticasTable()}
-          </div>
-        </div>
+      <div className="result">
+        <h1>Optimo</h1>
+        <h2>Page Faults: {OptimoPageFaults}</h2>
+        <div className="Tables">{RenderTable(OptimoFramesState)}</div>
+        <h1>FIFO</h1>
+        <h2>Page Faults: {FifoPageFaults}</h2>
+        <div className="Tables">{RenderTable(FifoFramesState)}</div>
+        <h1>LRU</h1>
+        <h2>Page Faults: {LruPageFaults}</h2>
+        <div className="Tables">{RenderTable(LruFramesState)}</div>
+        <h1>FFM</h1>
+        <h2>Page Faults: {FfmPageFaults}</h2>
+        <div className="Tables">{FFMRender()}</div>
+        <h1>Statistcs</h1>
+        <div className="Tables">{EstadisticasTable()}</div>
+      </div>
     </div>
   );
 }
-
-export default All;

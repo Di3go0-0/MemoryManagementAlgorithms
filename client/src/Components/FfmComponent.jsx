@@ -1,26 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { useGlobalContext } from "../Context/Context";
-import FFM from "../Algorithms/FFM.js";
+import { useState, useEffect } from "react";
+import { useGlobalContext } from "../Context";
+import { FFM } from "../Algorithms";
 import "./css/style.css";
 
-function FfmComponent() {
+export function FfmComponent() {
   const { pagesList, showFrame } = useGlobalContext();
   const [framesState, setFramesState] = useState([]);
   const [pageFaults, setPageFaults] = useState(0);
   const [bitsReferenciaState, setBitsReferenciaState] = useState([]);
 
-
   const [secondFrames, setSecondFrames] = useState(0); // Estado para la segunda cantidad de frames
   const [secondFramesState, setSecondFramesState] = useState([]); // Estado para los resultados del segundo frame
   const [secondPageFaults, setSecondPageFaults] = useState(0); // Estado para los page faults del segundo frame
-  const [secondBitsReferenciaState, setSecondBitsReferenciaState] = useState([]); // Estado para los bits de referencia del segundo frame
+  const [secondBitsReferenciaState, setSecondBitsReferenciaState] = useState(
+    [],
+  ); // Estado para los bits de referencia del segundo frame
 
   const [beladyAnomaly, setBeladyAnomaly] = useState(false); // Estado para la anomalía de Belady
 
   const handleSecondFramesChange = (e) => {
     const { value } = e.target;
     setSecondFrames(Number(value));
-  }
+  };
 
   useEffect(() => {
     console.log("FfmComponent useEffect called");
@@ -45,17 +46,19 @@ function FfmComponent() {
       // Detectar la anomalía de Belady
       if (secondFrames > showFrame && resultado.pageFaults > pageFaults) {
         setBeladyAnomaly(true);
-      } else if (showFrame > secondFrames && pageFaults > resultado.pageFaults) {
+      } else if (
+        showFrame > secondFrames &&
+        pageFaults > resultado.pageFaults
+      ) {
         setBeladyAnomaly(true);
       } else {
         setBeladyAnomaly(false);
       }
     }
-  }, [pagesList, showFrame, secondFrames]);
+  }, [pagesList, showFrame, secondFrames, pageFaults]);
 
   const renderTable = (showFrame, framesState, bitsReferenciaState) => {
     const numRows = showFrame + 1; // Número de filas (showFrame + 1 para el título)
-    const numCols = pagesList.length; // Número de columnas
 
     // Detectar si la página en una celda fue reemplazada
     const isPageFault = (currentFrame, prevFrame, rowIndex) => {
@@ -129,8 +132,7 @@ function FfmComponent() {
       <div className="result">
         <h2>Page Faults: {pageFaults}</h2>
         <div className="Tables">
-
-        {renderTable(showFrame, framesState, bitsReferenciaState)}
+          {renderTable(showFrame, framesState, bitsReferenciaState)}
         </div>
       </div>
 
@@ -145,7 +147,13 @@ function FfmComponent() {
         {secondFrames > 0 && (
           <>
             <h3>Page Faults: {secondPageFaults}</h3>
-            <div className="Tables">{renderTable(secondFrames, secondFramesState, secondBitsReferenciaState)}</div>
+            <div className="Tables">
+              {renderTable(
+                secondFrames,
+                secondFramesState,
+                secondBitsReferenciaState,
+              )}
+            </div>
             <div>
               <h2>Belady Anomaly: {beladyAnomaly ? "Sí" : "No"}</h2>
             </div>
@@ -156,4 +164,3 @@ function FfmComponent() {
   );
 }
 
-export default FfmComponent;
